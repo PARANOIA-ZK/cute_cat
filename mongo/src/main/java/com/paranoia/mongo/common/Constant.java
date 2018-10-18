@@ -8,15 +8,48 @@ import lombok.Getter;
  */
 public interface Constant {
 
-    @Getter
-    enum OrganizationTypeEnum {
-        HOSPITAL("医院"),
-        OTHER("其他巴拉巴拉...");
+    interface Common{
+        @Getter
+        enum gender {
+            MAN("男"),
+            WOMAN("女"),
+            UNKNOWN("不明");
 
-        private String name;
+            private String name;
 
-        OrganizationTypeEnum(String name) {
-            this.name = name;
+            gender(String name) {
+                this.name = name;
+            }
         }
     }
+
+    interface Organization {
+
+        @Getter
+        enum organizationType {
+            HOSPITAL("医院"),
+            COMPANY("企业");
+
+            private String name;
+
+            organizationType(String name) {
+                this.name = name;
+            }
+        }
+    }
+
+    interface Platform{
+
+        @Getter
+        enum platformType{
+            SYSTEM("系统"),
+            TERMINAL("终端");
+            private String name;
+
+            platformType(String name) {
+                this.name = name;
+            }
+        }
+    }
+
 }

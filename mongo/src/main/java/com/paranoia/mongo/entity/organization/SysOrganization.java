@@ -1,10 +1,14 @@
-package com.paranoia.mongo.entity;
+package com.paranoia.mongo.entity.organization;
 
+import com.paranoia.mongo.entity.common.BaseEntity;
 import lombok.Data;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
+import java.util.Date;
 
 /**
  * @author PARANOIA_ZK
@@ -12,11 +16,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
  */
 @Data
 @Document(collection = "sys_organization")
-@Description("机构主表")
-public class SysOrganization {
+@Description("机构表")
+public class SysOrganization extends BaseEntity {
 
     @Id
     private String id;
+
+    private String code;
 
     @Indexed(unique = true)
     private String name;
@@ -24,19 +30,27 @@ public class SysOrganization {
     private String type;
 
     @Indexed(unique = true)
-    private String appId;
+    @Field("app_key")
+    private String appKey;
 
+    @Field("app_secret")
     private String appSecret;
 
-    private String salt;
-
-    private String domain;
+    @Field("app_salt")
+    private String appSalt;
 
     private SysOrganizationDetail detail;
 
-    private String createDate;
+    /**
+     * 审核状态
+     */
+    @Field("check_status")
+    private String checkStatus;
 
-    private boolean isDel;
+    /**
+     * 机构简述
+     */
+    private String intro;
 
-    private boolean isDisable;
+
 }

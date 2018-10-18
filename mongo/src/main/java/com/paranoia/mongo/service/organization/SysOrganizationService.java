@@ -1,10 +1,10 @@
-package com.paranoia.mongo.service;
+package com.paranoia.mongo.service.organization;
 
 
 import com.paranoia.mongo.common.Bo;
 import com.paranoia.mongo.common.Pager;
-import com.paranoia.mongo.entity.SysOrganization;
 import com.paranoia.mongo.entity.TestTransaction;
+import com.paranoia.mongo.entity.organization.SysOrganization;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
@@ -19,13 +19,11 @@ public interface SysOrganizationService {
 
     void saveAll(List<SysOrganization> list);
 
-    Page<SysOrganization> pageWithCondition();
-
-    Page<SysOrganization> page(Pager pager);
+    Page<SysOrganization> pageWithCondition(SysOrganization sysOrganization, Pager pager);
 
     List<SysOrganization> queryWithCondition(SysOrganization sysOrganization);
 
     Bo findOne(SysOrganization sysOrganization);
 
-    void testTransaction(SysOrganization sysOrganization, TestTransaction testTransaction,TestTransaction newTest);
+    SysOrganization findOneWithCondition(SysOrganization sysOrganization);
 }

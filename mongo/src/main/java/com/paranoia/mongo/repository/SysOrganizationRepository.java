@@ -1,8 +1,9 @@
 package com.paranoia.mongo.repository;
 
-import com.paranoia.mongo.entity.SysOrganization;
+import com.paranoia.mongo.entity.organization.SysOrganization;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +19,11 @@ public interface SysOrganizationRepository extends MongoRepository<SysOrganizati
     @Deprecated
     List<SysOrganization> findAllByType(String type);
 
+    @Query(value = "{" +
+            "name:{$regex:?0}," +
+            "is_del:?1," +
+            "is_disable:?2}", fields = "{detail:1}")
+    @Description("https://docs.mongodb.com/manual/reference/operator/query/regex/")
+    List<SysOrganization> findByNameAndIsDelAndIsDisable(String name, boolean isDel, boolean isDisable);
 
-    @Description("这种可以通过条件查询的实现，获取集合之后使用size， but! 建议还是不要这么做 ！")
-    long countByTypeAndDisable(String type, boolean isDisable);
 }

@@ -2,18 +2,19 @@ package com.paranoia.mongo.service;
 
 import com.paranoia.mongo.common.Bo;
 import com.paranoia.mongo.common.Constant;
-import com.paranoia.mongo.common.Pager;
-import com.paranoia.mongo.entity.SysOrganization;
-import com.paranoia.mongo.entity.SysOrganizationDetail;
-import com.paranoia.mongo.entity.TestTransaction;
+import com.paranoia.mongo.common.NameUtil;
+import com.paranoia.mongo.entity.common.ContactWay;
+import com.paranoia.mongo.entity.organization.SysOrganization;
+import com.paranoia.mongo.entity.organization.SysOrganizationDetail;
 import com.paranoia.mongo.repository.SysOrganizationRepository;
-import com.paranoia.mongo.repository.TestTransactionRepository;
+import com.paranoia.mongo.service.organization.SysOrganizationService;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.transaction.TestTransaction;
 
 import java.util.*;
 
@@ -28,9 +29,9 @@ public class SysOrganizationServiceImplTest {
     @Autowired
     private SysOrganizationService sysOrganizationService;
     @Autowired
-    private TestTransactionRepository testTransactionRepository;
-    @Autowired
     private SysOrganizationRepository sysOrganizationRepository;
+
+    private static List<String> province = Arrays.asList("浙江", "山东", "北京", "江苏");
 
     @Test
     public void save() {
@@ -55,69 +56,64 @@ public class SysOrganizationServiceImplTest {
     }
 
     @Test
-    public void page() {
-        Pager pager = new Pager(2, 5);
-        sysOrganizationService.page(pager).getContent().forEach(System.out::println);
-    }
-
-    @Test
     public void queryWithCondition() {
         SysOrganization sysOrganization = new SysOrganization();
-        sysOrganization.setDisable(true);
+        //sysOrganization.setDel(true);
         //模糊查询
         //sysOrganization.setName("61");
+        SysOrganizationDetail detail = new SysOrganizationDetail();
+        detail.setProvince("山东");
+        sysOrganization.setDetail(detail);
         sysOrganizationService.queryWithCondition(sysOrganization).forEach(System.out::println);
     }
 
     @Test
     public void findOne() {
         SysOrganization sysOrganization = new SysOrganization();
-        sysOrganization.setId("5bc20b99b62e830b74c488d2");
+        sysOrganization.setName("濒躺岁慰赦科技分公司");
         Bo bo = sysOrganizationService.findOne(sysOrganization);
         System.out.println("bo = " + bo);
     }
 
     @Test
-    public void saveOne() {
-        TestTransaction testTransaction = new TestTransaction("张三");
-        testTransactionRepository.save(testTransaction);
+    public void findOneWithCondition() {
+        SysOrganization sysOrganization = new SysOrganization();
+        sysOrganization.setName("濒躺岁慰赦科技分公司");
+        SysOrganization sysOrganizationss = sysOrganizationService.findOneWithCondition(sysOrganization);
+        System.out.println("sysOrganizationss = " + sysOrganizationss);
     }
 
     @Test
-    public void testTransaction() {
-        Optional<TestTransaction> optionalTestTransaction = testTransactionRepository.findById("5bc46a0eb62e8325682f64b8");
-        TestTransaction testTransaction = optionalTestTransaction.get();
-        testTransaction.setName("张三的father");
-
-        Optional<SysOrganization> optionalSysOrganization = sysOrganizationRepository.findById("5bc20b99b62e830b74c488d2");
-        SysOrganization sysOrganization = optionalSysOrganization.get();
-        sysOrganization.setName("张三的mother");
-
-        TestTransaction newTest = new TestTransaction("张三的女儿");
-
-        sysOrganizationService.testTransaction(sysOrganization,testTransaction,newTest);
+    public void findOneWithConditionAndNotBackAll() {
+        List<SysOrganization> sysOrganizations = sysOrganizationRepository.findByNameAndIsDelAndIsDisable("公司", false, false);
+        sysOrganizations.forEach(System.out::println);
     }
+
 
 
     private SysOrganization getSysOrganization() {
         SysOrganization sysOrganization = new SysOrganization();
-        sysOrganization.setName("XX科技分公司" + new Random().nextInt());
-        sysOrganization.setAppId(String.valueOf(new ObjectId()));
+        sysOrganization.setCode(new ObjectId().toString().toUpperCase());
+        sysOrganization.setName(NameUtil.getRandomJianHan(5) + "科技分公司");
+        sysOrganization.setType(Constant.Organization.organizationType.COMPANY.getName());
+        sysOrganization.setAppKey(String.valueOf(new ObjectId()));
         sysOrganization.setAppSecret(UUID.randomUUID().toString().replaceAll("-", ""));
-        sysOrganization.setSalt("salt");
-        sysOrganization.setDomain("xxx.part.com");
-        sysOrganization.setType(Constant.OrganizationTypeEnum.HOSPITAL.getName());
-        sysOrganization.setCreateDate("");
+        sysOrganization.setAppSalt("salt");
 
         SysOrganizationDetail sysOrganizationDetail = new SysOrganizationDetail();
-        sysOrganizationDetail.setCode(String.valueOf(new ObjectId()).toUpperCase());
+        sysOrganizationDetail.setProvince(province.get(new Random().nextInt(4)));
+        sysOrganizationDetail.setCity("杭州");
         sysOrganizationDetail.setAddress("xx大厦");
-        sysOrganizationDetail.setIntro("this is an introduce");
-        sysOrganizationDetail.setTel("17625321349");
-
+        ContactWay contactWay = new ContactWay();
+        contactWay.setPhone(Arrays.asList("110", "726628"));
+        contactWay.setEmail(Arrays.asList("726628106zxcajhsd@yeah.net"));
+        sysOrganizationDetail.setContactWay(contactWay);
         sysOrganization.setDetail(sysOrganizationDetail);
+
+        sysOrganization.setCreateDate(new Date());
         sysOrganization.setDel(false);
         sysOrganization.setDisable(false);
         return sysOrganization;
     }
+
 }

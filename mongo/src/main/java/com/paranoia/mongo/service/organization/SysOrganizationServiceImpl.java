@@ -1,8 +1,8 @@
-package com.paranoia.mongo.service;
+package com.paranoia.mongo.service.organization;
 
 import com.paranoia.mongo.common.Bo;
 import com.paranoia.mongo.common.Pager;
-import com.paranoia.mongo.entity.SysOrganization;
+import com.paranoia.mongo.entity.organization.SysOrganization;
 import com.paranoia.mongo.entity.TestTransaction;
 import com.paranoia.mongo.repository.SysOrganizationRepository;
 import com.paranoia.mongo.repository.TestTransactionRepository;
@@ -23,9 +23,6 @@ public class SysOrganizationServiceImpl implements SysOrganizationService {
 
     @Autowired
     private SysOrganizationRepository sysOrganizationRepository;
-
-    @Autowired
-    private TestTransactionRepository testTransactionRepository;
 
     /**
      * 保存  更新
@@ -51,18 +48,19 @@ public class SysOrganizationServiceImpl implements SysOrganizationService {
     /**
      * 带条件分页
      *
-     * @return
+     * @return page
+     * @apiNote :  限制为原生属性
      */
     @Override
-    public Page<SysOrganization> pageWithCondition() {
-        return null;
-    }
+    public Page<SysOrganization> pageWithCondition(SysOrganization sysOrganization, Pager pager) {
+        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
+                                                      .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                                                      .withIgnoreCase(true)
+                                                      .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);
 
-    @Override
-    public Page<SysOrganization> page(Pager pager) {
+        Example<SysOrganization> example = Example.of(sysOrganization, exampleMatcher);
         Pageable pageable = PageRequest.of(pager.getPageNo() - 1, pager.getPageSize());
-        Page<SysOrganization> page = sysOrganizationRepository.findAll(pageable);
-        return page;
+        return sysOrganizationRepository.findAll(example, pageable);
     }
 
     /**
@@ -70,7 +68,7 @@ public class SysOrganizationServiceImpl implements SysOrganizationService {
      * todo 待完善
      *
      * @param sysOrganization
-     * @return
+     * @return list
      */
     @Override
     public List<SysOrganization> queryWithCondition(SysOrganization sysOrganization) {
@@ -97,14 +95,10 @@ public class SysOrganizationServiceImpl implements SysOrganizationService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void testTransaction(SysOrganization sysOrganization, TestTransaction testTransaction, TestTransaction newTest) {
-        testTransactionRepository.insert(newTest);
-
-        sysOrganizationRepository.save(sysOrganization);
-        //int x = 1 / 0;
-        testTransactionRepository.save(testTransaction);
-
+    public SysOrganization findOneWithCondition(SysOrganization sysOrganization) {
+        Example<SysOrganization> example = Example.of(sysOrganization);
+        Optional<SysOrganization> one = sysOrganizationRepository.findOne(example);
+        return one.orElseThrow(RuntimeException::new);
     }
 
 
