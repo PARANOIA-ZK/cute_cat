@@ -3,9 +3,9 @@ package com.paranoia.mongo.service;
 import com.paranoia.mongo.common.Bo;
 import com.paranoia.mongo.common.Constant;
 import com.paranoia.mongo.common.NameUtil;
-import com.paranoia.mongo.entity.common.ContactWay;
-import com.paranoia.mongo.entity.organization.SysOrganization;
-import com.paranoia.mongo.entity.organization.SysOrganizationDetail;
+import com.paranoia.mongo.collection.common.ContactWay;
+import com.paranoia.mongo.collection.organization.SysOrganization;
+import com.paranoia.mongo.collection.organization.SysOrganizationDetail;
 import com.paranoia.mongo.repository.SysOrganizationRepository;
 import com.paranoia.mongo.service.organization.SysOrganizationService;
 import org.bson.types.ObjectId;
@@ -14,7 +14,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.transaction.TestTransaction;
 
 import java.util.*;
 

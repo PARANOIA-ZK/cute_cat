@@ -1,6 +1,6 @@
 package com.paranoia.mongo.service.account;
 
-import com.paranoia.mongo.entity.account.SysAccount;
+import com.paranoia.mongo.collection.account.SysAccount;
 import com.paranoia.mongo.service.BaseService;
 
 /**

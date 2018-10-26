@@ -1,6 +1,6 @@
 package com.paranoia.mongo.service.platform;
 
-import com.paranoia.mongo.entity.platform.SysPlatform;
+import com.paranoia.mongo.collection.platform.SysPlatform;
 import com.paranoia.mongo.repository.SysPlatformRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

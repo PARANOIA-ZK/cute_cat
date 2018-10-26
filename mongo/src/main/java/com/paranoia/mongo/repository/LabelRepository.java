@@ -1,6 +1,6 @@
 package com.paranoia.mongo.repository;
 
-import com.paranoia.mongo.entity.label.Label;
+import com.paranoia.mongo.collection.label.Label;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,6 @@
 package com.paranoia.mongo.repository;
 
-import com.paranoia.mongo.entity.platform.SysPlatform;
-import com.paranoia.mongo.entity.platform.SysPlatformRole;
+import com.paranoia.mongo.collection.platform.SysPlatformRole;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

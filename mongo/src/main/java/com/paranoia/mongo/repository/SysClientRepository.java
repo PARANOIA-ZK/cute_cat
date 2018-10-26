@@ -1,6 +1,6 @@
 package com.paranoia.mongo.repository;
 
-import com.paranoia.mongo.entity.client.SysClient;
+import com.paranoia.mongo.collection.client.SysClient;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

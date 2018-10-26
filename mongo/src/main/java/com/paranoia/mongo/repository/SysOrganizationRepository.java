@@ -1,6 +1,6 @@
 package com.paranoia.mongo.repository;
 
-import com.paranoia.mongo.entity.organization.SysOrganization;
+import com.paranoia.mongo.collection.organization.SysOrganization;
 import org.springframework.context.annotation.Description;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

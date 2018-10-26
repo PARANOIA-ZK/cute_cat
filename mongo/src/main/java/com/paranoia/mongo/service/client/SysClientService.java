@@ -1,6 +1,6 @@
 package com.paranoia.mongo.service.client;
 
-import com.paranoia.mongo.entity.client.SysClient;
+import com.paranoia.mongo.collection.client.SysClient;
 import com.paranoia.mongo.service.BaseService;
 
 /**

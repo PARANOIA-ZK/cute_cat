@@ -1,6 +1,6 @@
 package com.paranoia.mongo.service;
 
-import com.paranoia.mongo.entity.label.Label;
+import com.paranoia.mongo.collection.label.Label;
 import com.paranoia.mongo.repository.LabelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;

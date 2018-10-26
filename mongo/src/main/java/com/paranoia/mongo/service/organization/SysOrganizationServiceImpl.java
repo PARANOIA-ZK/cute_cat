@@ -2,14 +2,11 @@ package com.paranoia.mongo.service.organization;
 
 import com.paranoia.mongo.common.Bo;
 import com.paranoia.mongo.common.Pager;
-import com.paranoia.mongo.entity.organization.SysOrganization;
-import com.paranoia.mongo.entity.TestTransaction;
+import com.paranoia.mongo.collection.organization.SysOrganization;
 import com.paranoia.mongo.repository.SysOrganizationRepository;
-import com.paranoia.mongo.repository.TestTransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;

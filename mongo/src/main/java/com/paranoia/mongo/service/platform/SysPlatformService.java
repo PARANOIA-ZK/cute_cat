@@ -1,6 +1,6 @@
 package com.paranoia.mongo.service.platform;
 
-import com.paranoia.mongo.entity.platform.SysPlatform;
+import com.paranoia.mongo.collection.platform.SysPlatform;
 import com.paranoia.mongo.service.BaseService;
 
 /**

@@ -3,8 +3,7 @@ package com.paranoia.mongo.service.organization;
 
 import com.paranoia.mongo.common.Bo;
 import com.paranoia.mongo.common.Pager;
-import com.paranoia.mongo.entity.TestTransaction;
-import com.paranoia.mongo.entity.organization.SysOrganization;
+import com.paranoia.mongo.collection.organization.SysOrganization;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

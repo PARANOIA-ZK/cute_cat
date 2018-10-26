@@ -1,6 +1,6 @@
 package com.paranoia.mongo.service.client;
 
-import com.paranoia.mongo.entity.client.SysClient;
+import com.paranoia.mongo.collection.client.SysClient;
 import com.paranoia.mongo.repository.SysClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
