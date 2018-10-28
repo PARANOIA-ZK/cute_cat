@@ -3,18 +3,14 @@ package com.paranoia.webfluxreactive.service.platform;
 import com.paranoia.webfluxreactive.collection.embed.EmbedOne;
 import com.paranoia.webfluxreactive.collection.embed.EmbedThree;
 import com.paranoia.webfluxreactive.collection.embed.EmbedTwo;
-import com.paranoia.webfluxreactive.collection.platform.SysPlatform;
 import com.paranoia.webfluxreactive.common.NameUtil;
 import com.paranoia.webfluxreactive.repository.EmbedOneRepository;
-import com.sun.corba.se.spi.ior.ObjectKey;
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 import java.util.*;
 
@@ -34,25 +30,25 @@ public class EmbedOneTest {
     private static List<String> city = Arrays.asList("杭州", "青岛", "成都", "济南","南京");
     private static List<String> name = Arrays.asList("张三", "李四", "王五", "托马斯","MLXG");
 
-    @Test
-    public void saveOrUpdate() {
-        EmbedOne embedOne = getEmbedOne();
-
-        Mono<EmbedOne> save = embedOneRepository.save(embedOne);
-        System.out.println("save = " + save.block());
-    }
-
-    @Test
-    public void saveList() {
-        int num = 100_000;
-        List<EmbedOne> embedOneList = new ArrayList<>(150_000);
-        for (int i = 0; i < num; i++) {
-            embedOneList.add(getEmbedOne());
-        }
-        System.out.println("embedOneList = " + embedOneList.size());
-        Flux<EmbedOne> embedOneFlux = embedOneRepository.saveAll(embedOneList);
-        System.out.println("embedOneFlux = " + embedOneFlux.count().block());
-    }
+    //@Test
+    //public void saveOrUpdate() {
+    //    EmbedOne embedOne = getEmbedOne();
+    //
+    //    Mono<EmbedOne> save = embedOneRepository.save(embedOne);
+    //    System.out.println("save = " + save.block());
+    //}
+    //
+    //@Test
+    //public void saveList() {
+    //    int num = 100_000;
+    //    List<EmbedOne> embedOneList = new ArrayList<>(150_000);
+    //    for (int i = 0; i < num; i++) {
+    //        embedOneList.add(getEmbedOne());
+    //    }
+    //    System.out.println("embedOneList = " + embedOneList.size());
+    //    Flux<EmbedOne> embedOneFlux = embedOneRepository.saveAll(embedOneList);
+    //    System.out.println("embedOneFlux = " + embedOneFlux.count().block());
+    //}
 
     private EmbedOne getEmbedOne() {
         EmbedOne embedOne = new EmbedOne();

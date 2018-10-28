@@ -5,9 +5,7 @@ import com.paranoia.webfluxreactive.service.platform.SysPlatformService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.reactive.function.BodyInserter;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
@@ -25,7 +23,13 @@ public class SysPlatformController {
     private SysPlatformService sysPlatformService;
 
     @GetMapping()
-    public Mono<SysPlatform> getOne(SysPlatform sysPlatform) {
+    public Mono<ServerResponse> getOne(SysPlatform sysPlatform) {
+        Mono<SysPlatform> oneWithCondition = sysPlatformService.findOneWithCondition(sysPlatform);
+        return ServerResponse.ok().contentType(MediaType.APPLICATION_JSON_UTF8).body(oneWithCondition, SysPlatform.class);
+    }
+
+    @GetMapping("/name")
+    public Mono<SysPlatform> getSysPlatform(SysPlatform sysPlatform) {
         Mono<SysPlatform> oneWithCondition = sysPlatformService.findOneWithCondition(sysPlatform);
         return oneWithCondition;
     }
@@ -34,6 +38,13 @@ public class SysPlatformController {
     public Mono<SysPlatform> saveOne(@RequestBody SysPlatform sysPlatform) {
         Mono<SysPlatform> oneWithCondition = sysPlatformService.saveOrUpdate(sysPlatform);
         return oneWithCondition;
+    }
+
+    @GetMapping("/all")
+    public Mono<ServerResponse> getAll(SysPlatform sysPlatform) {
+        return ServerResponse.ok()
+                             .contentType(MediaType.APPLICATION_JSON_UTF8)
+                             .body(sysPlatformService.findAllByCondition(sysPlatform), SysPlatform.class);
     }
 
 
