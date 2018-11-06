@@ -5,7 +5,7 @@ import lombok.Data;
 /**
  * @author PARANOIA_ZK
  * @date 2018/10/19 10:36
- * @description : 联系方式
+ * @description :
  */
 @Data
 public class Images {

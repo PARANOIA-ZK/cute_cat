@@ -51,9 +51,9 @@ public class SysOrganizationServiceImpl implements SysOrganizationService {
     @Override
     public Page<SysOrganization> pageWithCondition(SysOrganization sysOrganization, Pager pager) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
-                                                      .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-                                                      .withIgnoreCase(true)
-                                                      .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase(true)
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);
 
         Example<SysOrganization> example = Example.of(sysOrganization, exampleMatcher);
         Pageable pageable = PageRequest.of(pager.getPageNo() - 1, pager.getPageSize());
@@ -71,12 +71,14 @@ public class SysOrganizationServiceImpl implements SysOrganizationService {
     public List<SysOrganization> queryWithCondition(SysOrganization sysOrganization) {
 
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
-                                                      .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
-                                                      .withIgnoreCase(true)
-                                                      .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                .withIgnoreCase(true)
+                .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);
 
         Example<SysOrganization> example = Example.of(sysOrganization, exampleMatcher);
-        return sysOrganizationRepository.findAll(example);
+
+        Sort sort = Sort.by(Sort.Order.desc("create_date"));
+        return sysOrganizationRepository.findAll(example, sort);
     }
 
     @Override

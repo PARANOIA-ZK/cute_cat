@@ -9,7 +9,7 @@ import java.util.Date;
 /**
  * @author ZHANGKAI
  * @date 2018/10/22
- * @description
+ * @description  collection 基类
  */
 @Data
 public class BaseEntity implements Serializable {
@@ -23,8 +23,8 @@ public class BaseEntity implements Serializable {
     @Field("is_disable")
     private boolean isDisable;
 
-    /**
-     * 数据版本
-     */
-    private String version = "1.0";
+//    /**
+//     * 数据版本
+//     */
+//    private String version = "1.0";
 }

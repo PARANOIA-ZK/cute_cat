@@ -40,7 +40,7 @@ public class SysPlatformServiceImpl implements SysPlatformService {
     @Override
     public Flux<SysPlatform> findAllByCondition(SysPlatform sysPlatform) {
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
-                                                      .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
+                                                      .withStringMatcher(ExampleMatcher.StringMatcher.EXACT)
                                                       .withIgnoreCase(true)
                                                       .withMatcher("name", ExampleMatcher.GenericPropertyMatcher::contains);
         Example<SysPlatform> example = Example.of(sysPlatform, exampleMatcher);

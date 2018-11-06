@@ -59,17 +59,18 @@ public class SysOrganizationServiceImplTest {
         SysOrganization sysOrganization = new SysOrganization();
         //sysOrganization.setDel(true);
         //模糊查询
-        //sysOrganization.setName("61");
-        SysOrganizationDetail detail = new SysOrganizationDetail();
-        detail.setProvince("山东");
-        sysOrganization.setDetail(detail);
+        //sysOrganization.setName("公司");
+//        SysOrganizationDetail detail = new SysOrganizationDetail();
+//        detail.setProvince("江苏");
+//        sysOrganization.setDetail(detail);
+        System.out.println("--------------------");
         sysOrganizationService.queryWithCondition(sysOrganization).forEach(System.out::println);
     }
 
     @Test
     public void findOne() {
         SysOrganization sysOrganization = new SysOrganization();
-        sysOrganization.setName("濒躺岁慰赦科技分公司");
+        sysOrganization.setName("措脏踌苦斑科技分公司");
         Bo bo = sysOrganizationService.findOne(sysOrganization);
         System.out.println("bo = " + bo);
     }
@@ -77,7 +78,7 @@ public class SysOrganizationServiceImplTest {
     @Test
     public void findOneWithCondition() {
         SysOrganization sysOrganization = new SysOrganization();
-        sysOrganization.setName("濒躺岁慰赦科技分公司");
+        sysOrganization.setName("弹铃佣胀欠科技分公司");
         SysOrganization sysOrganizationss = sysOrganizationService.findOneWithCondition(sysOrganization);
         System.out.println("sysOrganizationss = " + sysOrganizationss);
     }

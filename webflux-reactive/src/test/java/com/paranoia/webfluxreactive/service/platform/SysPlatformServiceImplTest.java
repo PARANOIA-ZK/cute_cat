@@ -7,6 +7,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import static org.junit.Assert.*;
@@ -28,7 +29,7 @@ public class SysPlatformServiceImplTest {
         SysPlatform platform = new SysPlatform();
         platform.setCode(new ObjectId().toString().toUpperCase());
         platform.setType("系统");
-        platform.setName("运营后台");
+        platform.setName("运营后台qweqweqwewqdasdas");
         platform.setInfo("这是一个系统类型的运营后台");
         Mono<SysPlatform> sysPlatformMono = sysPlatformService.saveOrUpdate(platform);
         System.out.println("sysPlatformMono = " + sysPlatformMono.block());
@@ -36,5 +37,13 @@ public class SysPlatformServiceImplTest {
 
     @Test
     public void saveAll() {
+    }
+
+
+    @Test
+    public void getAll() {
+        SysPlatform sysPlatform = new SysPlatform();
+        Flux<SysPlatform> allByCondition = sysPlatformService.findAllByCondition(sysPlatform);
+        System.out.println("allByCondition = " + allByCondition);
     }
 }
