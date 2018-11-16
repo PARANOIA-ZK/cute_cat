@@ -47,7 +47,7 @@ public class DBrefTest {
 
     @Test
     public void getMain() {
-        Mono<Main> byId = mainRepository.findById("5bed07c946ce5e02f8cd0ee9");
+        Mono<Main> byId = mainRepository.findById("5bed0be146ce5e0524feb202");
         Main main = byId.block();
         System.out.println("main = " + main);
     }

@@ -5,6 +5,7 @@ import com.paranoia.webfluxreactive.repository.SysPlatformRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -19,7 +20,8 @@ public class SysPlatformServiceImpl implements SysPlatformService {
 
     @Autowired
     private SysPlatformRepository sysPlatformRepository;
-
+    @Autowired
+    ReactiveMongoTemplate reactiveMongoTemplate;
 
     @Override
     public Mono<SysPlatform> saveOrUpdate(SysPlatform sysPlatform) {

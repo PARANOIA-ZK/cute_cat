@@ -24,5 +24,5 @@ public class Main {
     private String gender;
 
     @DBRef
-    private Ref ref;
+    private Object ref;
 }
