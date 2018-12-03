@@ -1,12 +1,14 @@
 buildscript {
     ext {
-        springBootVersion = '2.0.6.RELEASE'
+        springBootVersion = '2.1.0.M4'
     }
     repositories {
         maven {
             name "aliyunmaven"
             url "http://maven.aliyun.com/nexus/content/groups/public/"
         }
+        maven { url 'https://repo.spring.io/snapshot' }
+        maven { url 'https://repo.spring.io/milestone' }
 
     }
     dependencies {
@@ -27,6 +29,8 @@ repositories {
         name "aliyunmaven"
         url "http://maven.aliyun.com/nexus/content/groups/public/"
     }
+    maven { url 'https://repo.spring.io/snapshot' }
+    maven { url 'https://repo.spring.io/milestone' }
 
 }
 
