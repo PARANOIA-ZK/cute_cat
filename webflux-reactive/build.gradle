@@ -33,6 +33,7 @@ repositories {
 
 dependencies {
     compile group: 'org.projectlombok', name: 'lombok', version: '1.18.2'
+    compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.2'
     implementation('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
     implementation('org.springframework.boot:spring-boot-starter-webflux')
     testImplementation('org.springframework.boot:spring-boot-starter-test')

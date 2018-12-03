@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.server.ServerResponse;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -40,11 +41,20 @@ public class SysPlatformController {
         return oneWithCondition;
     }
 
-    @GetMapping("/all")
-    public Mono<ServerResponse> getAll(SysPlatform sysPlatform) {
-        return ServerResponse.ok()
-                             .contentType(MediaType.APPLICATION_JSON_UTF8)
-                             .body(sysPlatformService.findAllByCondition(sysPlatform), SysPlatform.class);
+    @GetMapping(value = "/all", produces = MediaType.APPLICATION_STREAM_JSON_VALUE)
+    public Flux<SysPlatform> getAll(SysPlatform sysPlatform) {
+        return sysPlatformService.findAllByCondition(sysPlatform).log();
+    }
+
+    @GetMapping("/aspect")
+    public Flux<String> testAspect(@RequestParam String name) {
+        return Flux.just("tom", "jerry", "jucifer", "kaige")
+                   .map(s -> {
+                       if ("kaige".equalsIgnoreCase(s)) {
+                           throw new RuntimeException("kaige is very handsome");
+                       }
+                       return s;
+                   });
     }
 
 
