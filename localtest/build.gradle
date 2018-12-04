@@ -27,6 +27,7 @@ repositories {
 dependencies {
     compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.17'
     compile('org.projectlombok:lombok:1.18.2')
+    compile group: 'com.google.zxing', name: 'core', version: '3.3.3'
     compile ('org.apache.commons:commons-lang3:3.8.1')
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
     implementation('org.springframework.boot:spring-boot-starter-web')

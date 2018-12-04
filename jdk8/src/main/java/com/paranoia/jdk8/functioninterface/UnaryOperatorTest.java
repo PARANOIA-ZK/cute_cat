@@ -1,4 +1,4 @@
-package com.paranoia.jdk8.函数式接口;
+package com.paranoia.jdk8.functioninterface;
 
 import java.util.ArrayList;
 import java.util.Arrays;
