@@ -8,6 +8,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
+import reactor.core.publisher.Flux;
 
 import java.util.Arrays;
 
@@ -38,7 +39,8 @@ public class FluxAspect {
                 " -> args : -> " + Arrays.toString(args));
 
         try {
-            return point.proceed();
+            Flux<Object> ff = (Flux<Object>) point.proceed();
+            return ff;
         } catch (Throwable throwable) {
             //经验证，webflux 异常不会在这里被捕获
             throwable.printStackTrace();

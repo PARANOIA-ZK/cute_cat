@@ -1,8 +1,13 @@
 package com.paranoia.webfluxreactive.api.flux;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
+import reactor.util.function.Tuples;
 
 /**
  * @author PARANOIA_ZK
@@ -25,33 +30,53 @@ public class FluxOne {
 
     private static void testSubscribe() {
         Flux<Integer> range = Flux.range(1, 5)
-                                  .map(i -> {
-                                      if (i <= 3) {
-                                          return i;
-                                      }
-                                      throw new RuntimeException("error:" + i);
-                                  });
+                .map(i -> {
+                    if (i <= 3) {
+                        return i;
+                    }
+                    throw new RuntimeException("error:" + i);
+                });
         range.subscribe(System.out::println, System.err::println, () -> System.out.println("DONE"));
     }
 
     private static void testHandle() {
         Flux<String> stringFlux = Flux.just("", "hi", "hello")
-                                      .handle((i, sink) -> {
-                                          if (!StringUtils.isEmpty(i)) {
-                                              sink.next(i);
-                                          }
-                                      });
+                .handle((i, sink) -> {
+                    if (!StringUtils.isEmpty(i)) {
+                        sink.next(i);
+                    }
+                });
 
         stringFlux.subscribe(System.out::println);
     }
 
     private static void testSchedules() {
         Flux.range(0, 10)
-            .subscribeOn(Schedulers.newSingle("single"))
-            .subscribe(System.out::println);
+                .subscribeOn(Schedulers.newSingle("single"))
+                .subscribe(System.out::println);
+    }
+
+    private static void testTupleUtils() {
+        Flux.just("one")
+                .zipWith(Mono.just("two"))
+                .map(tuple -> {
+                    String t1 = tuple.getT1();
+                    String t2 = tuple.getT2();
+                    return new User(t1, t2);
+                });
+
+
     }
 
 
+}
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+class User {
+    private String name;
+    private String age;
 }
 
 
