@@ -50,9 +50,10 @@ public class SysPlatformController {
     public Flux<String> testAspect(@RequestParam String name) {
         return Flux.just("tom", "jerry", "jucifer", "kaige")
                    .map(s -> {
-                       if ("kaige".equalsIgnoreCase(s)) {
-                           throw new RuntimeException("kaige is very handsome");
-                       }
+                       System.out.println("s = " + s);
+                       //if ("kaige".equalsIgnoreCase(s)) {
+                       //    throw new RuntimeException("kaige is very handsome");
+                       //}
                        return s;
                    });
     }

@@ -1,10 +1,7 @@
 package com.paranoia.upupup.poi;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

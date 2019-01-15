@@ -1,6 +1,7 @@
 package com.paranoia.jdk8.date;
 
 import java.text.SimpleDateFormat;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -75,22 +76,3 @@ public class LocalDateTest {
         return list;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
