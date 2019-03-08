@@ -58,35 +58,6 @@
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:5.0.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-context:5.0.10.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-expression:5.0.10.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-spring-boot-starter-basic:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-engine:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-bpmn-converter:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-bpmn-model:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-process-validation:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-image-generator:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-dmn-api:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-dmn-model:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-form-model:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-form-api:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-email:1.4" level="project" />
-    <orderEntry type="library" name="Maven: com.sun.mail:javax.mail:1.6.2" level="project" />
-    <orderEntry type="library" name="Maven: javax.activation:activation:1.1.1" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.7" level="project" />
-    <orderEntry type="library" name="Maven: org.mybatis:mybatis:3.4.2" level="project" />
-    <orderEntry type="library" name="Maven: de.odysseus.juel:juel-api:2.2.7" level="project" />
-    <orderEntry type="library" name="Maven: de.odysseus.juel:juel-impl:2.2.7" level="project" />
-    <orderEntry type="library" name="Maven: de.odysseus.juel:juel-spi:2.2.7" level="project" />
-    <orderEntry type="library" name="Maven: joda-time:joda-time:2.9.9" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:jcl-over-slf4j:1.7.25" level="project" />
-    <orderEntry type="library" name="Maven: org.activiti:activiti-spring:6.0.0" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-jdbc:5.0.10.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.0.10.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-orm:5.0.10.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: commons-dbcp:commons-dbcp:1.4" level="project" />
-    <orderEntry type="library" name="Maven: commons-pool:commons-pool:1.6" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-jdbc:2.0.6.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:2.7.9" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-starter-test:2.0.6.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test:2.0.6.RELEASE" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:2.0.6.RELEASE" level="project" />
@@ -94,6 +65,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: net.minidev:json-smart:2.3" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: net.minidev:accessors-smart:1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.ow2.asm:asm:5.0.4" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.12" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.assertj:assertj-core:3.9.1" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.mockito:mockito-core:2.15.0" level="project" />

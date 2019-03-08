@@ -32,4 +32,9 @@ dependencies {
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
     implementation('org.springframework.boot:spring-boot-starter-web')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+
+
+    // https://mvnrepository.com/artifact/com.auth0/java-jwt
+    compile group: 'com.auth0', name: 'java-jwt', version: '3.5.0'
+
 }
