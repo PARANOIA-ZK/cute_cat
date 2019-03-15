@@ -9,6 +9,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
 
@@ -27,7 +28,7 @@ public class FluxAspect {
 
 
     @Around("logPointCut()")
-    public Object around(ProceedingJoinPoint point) {
+    public Object around(ProceedingJoinPoint point) throws Throwable {
         MethodSignature signature = (MethodSignature) point.getSignature();
 
         String className = point.getTarget().getClass().getName();
@@ -38,15 +39,12 @@ public class FluxAspect {
                 " -> method : -> " + methodName +
                 " -> args : -> " + Arrays.toString(args));
 
-        try {
-            Flux<Object> ff = (Flux<Object>) point.proceed();
-            return ff;
-        } catch (Throwable throwable) {
-            //经验证，webflux 异常不会在这里被捕获
-            throwable.printStackTrace();
-            log.error("something wrong : " + throwable.getLocalizedMessage());
-            return throwable.getLocalizedMessage();
-        }
+
+        Flux<Object> ff = (Flux<Object>) point.proceed();
+        return ff.onErrorResume(err -> {
+            System.out.println("err = " + err);
+            return Mono.just("err");
+        });
     }
 
     @AfterThrowing(value = "logPointCut()", throwing = "throwable")
