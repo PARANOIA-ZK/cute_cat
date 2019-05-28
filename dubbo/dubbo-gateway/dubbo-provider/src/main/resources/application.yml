@@ -1,0 +1,27 @@
+server:
+  port: 8081
+
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: dubbo-provider
+  cloud:
+    zookeeper:
+      client:
+        sasl: false
+      enabled: true
+      connect-string: localhost:2181
+
+
+dubbo:
+  application.name: ${spring.application.name}
+  registry.address: zookeeper://127.0.0.1:2181
+  config-center.address: zookeeper://127.0.0.1:2181
+  consumer.timeout: 3000
+
+
+
+
+

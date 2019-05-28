@@ -1,0 +1,27 @@
+server:
+  port: 8083
+
+
+spring:
+  application:
+    name: SC-gateway
+  cloud:
+    zookeeper:
+      client:
+        sasl: false
+      enabled: true
+      connect-string: localhost:2181
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+      default-filters:
+      routes:
+        - id: zk_route
+          uri: lb://DUBBO-CONSUMER
+            # path中是server服务中提供的接口
+            # Method ： 指定访问的请求类型
+          predicates:
+              - Path=/hi
+              - Method=GET
