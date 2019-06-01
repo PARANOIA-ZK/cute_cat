@@ -1,0 +1,26 @@
+server:
+  port: 8083
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+spring:
+  application:
+    name: SC-gateway
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 47.106.221.253:8848
+    gateway:
+      default-filters:
+      routes:
+        - id: zk_route
+          uri: lb://SCA-FACADE
+            # path中是server服务中提供的接口
+            # Method ： 指定访问的请求类型
+          predicates:
+              - Path=/hi
+              - Method=GET

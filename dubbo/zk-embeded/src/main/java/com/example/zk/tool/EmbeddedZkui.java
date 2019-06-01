@@ -100,11 +100,11 @@ public class EmbeddedZkui {
         CloseableHttpResponse resp = null;
         try {
             httpclient = HttpClients.createDefault();
-            HttpGet httpPost = new HttpGet(ZKUI_HOST);
+            HttpGet httpGet = new HttpGet(ZKUI_HOST);
             while (true) {
-                Thread.sleep(1000);
+                Thread.sleep(2000);
                 try {
-                    resp = httpclient.execute(httpPost);
+                    resp = httpclient.execute(httpGet);
                     if (resp.getStatusLine().getStatusCode() != 404) {
                         break;
                     }

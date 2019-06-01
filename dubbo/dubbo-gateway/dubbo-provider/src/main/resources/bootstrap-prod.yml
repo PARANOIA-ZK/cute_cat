@@ -1,24 +1,24 @@
 server:
-  port: 8082
-
+  port: 8081
 
 spring:
-  profiles:
-    active: dev
   application:
-    name: dubbo-consumer
+    name: dubbo-provider
   cloud:
+    #替换nacos为zk
     zookeeper:
       client:
         sasl: false
       enabled: true
       connect-string: 47.106.221.253:2181
 
-
 dubbo:
   application.name: ${spring.application.name}
   registry.address: zookeeper://47.106.221.253:2181
   config-center.address: zookeeper://47.106.221.253:2181
   consumer.timeout: 3000
+
+
+
 
 

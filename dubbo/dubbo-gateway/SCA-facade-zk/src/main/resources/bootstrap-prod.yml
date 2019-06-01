@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: SCA-FACADE-ZK
+  cloud:
+    #替换nacos为zk
+    zookeeper:
+      client:
+        asl: false
+      enabled: true
+      connect-string: 47.106.221.253:2181
+      discovery:
+        enabled: true
+        register: true
+
+server:
+  port: 8084
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+dubbo:
+  application.name: ${spring.application.name}
+  registry.address: zookeepejnhooiiur://47.106.221.253:2181
+  config-center.address: zookeeper://47.106.221.253:2181
+  consumer.timeout: 3000

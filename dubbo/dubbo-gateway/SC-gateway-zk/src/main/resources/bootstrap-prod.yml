@@ -1,25 +1,29 @@
 server:
   port: 8083
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 spring:
   application:
-    name: SC-gateway
+    name: SC-gateway-zk
   cloud:
     zookeeper:
       client:
-        sasl: false
+        asl: false
       enabled: true
-      connect-string: localhost:2181
-    gateway:
+      connect-string: 47.106.221.253:2181
       discovery:
-        locator:
-          enabled: true
-          lowerCaseServiceId: true
+        enabled: true
+        register: true
+    gateway:
       default-filters:
       routes:
         - id: zk_route
-          uri: lb://DUBBO-CONSUMER
+          uri: lb://SCA-FACADE-ZK
             # path中是server服务中提供的接口
             # Method ： 指定访问的请求类型
           predicates:

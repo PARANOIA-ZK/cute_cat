@@ -10,6 +10,7 @@ import org.apache.dubbo.config.annotation.Service;
 @Service
 public class HelloServiceImpl implements HelloService {
     public String hello(String name) {
+        System.out.println("provider get name = " + name);
         return "hi , how are you ? my friend " + name;
     }
 }
