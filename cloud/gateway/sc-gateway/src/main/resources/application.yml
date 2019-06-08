@@ -1,0 +1,61 @@
+#gateway项目主要实践Spring Cloud Gateway可以实现的功能，所以gateway下的server只是简单的Boot项目
+service:
+  uri: http://localhost:9091
+
+
+
+spring:
+  cloud:
+    gateway:
+      default-filters:
+      routes:
+        - id: path_route
+          uri: ${service.uri}
+          # path中是server服务中提供的接口
+          # Method ： 指定访问的请求类型
+          predicates:
+            - Path=/server/{segment}
+            - Method=POST
+
+        - id: queryh_route
+          uri: ${service.uri}
+          # path中是server服务中提供的接口,可正则
+          predicates:
+            - Query=organizationCode
+          # 使用自定义过滤器
+          filters:
+            - JwtCheck
+
+        #将所有符合predicates规则的请求添加header并且修改路由地址
+        - id: header_route
+          uri: ${service.uri}
+          predicates:
+            - Path=/header
+          filters:
+            - AddRequestHeader=inner,jiansu
+            - PrefixPath=/addPath
+            #    - SetPath=/newpath  这个操作将所有符合predicates的请求重新定义路由
+
+        #过滤掉请求path前缀
+        - id: prefix_route
+          uri: ${service.uri}
+          predicates:
+            - Path=/api/platform/**
+          filters:
+            - StripPrefix=2
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.ipc.netty: DEBUG
+
+#page-403
+#management:
+#  endpoint:
+#    web:
+#      exposure:
+#        include: '*'
+#  security:
+#    enabled: false
