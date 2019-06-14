@@ -30,6 +30,8 @@ dependencies {
     compile group: 'com.google.zxing', name: 'core', version: '3.3.3'
     compile ('org.apache.commons:commons-lang3:3.8.1')
     compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.3'
+    compile group: 'org.springframework', name: 'spring-aop', version: '5.1.0.RELEASE'
     implementation('org.springframework.boot:spring-boot-starter-web')
     testImplementation('org.springframework.boot:spring-boot-starter-test')
+    
 }
