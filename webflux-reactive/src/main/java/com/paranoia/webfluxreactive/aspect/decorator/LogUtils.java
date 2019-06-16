@@ -1,7 +1,6 @@
 package com.paranoia.webfluxreactive.aspect.decorator;
 
 import io.netty.buffer.UnpooledByteBufAllocator;
-import org.assertj.core.util.Lists;
 import org.slf4j.Logger;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -11,6 +10,7 @@ import org.springframework.http.MediaType;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ import java.util.List;
  * @date 2019/1/9 22:07
  */
 public class LogUtils {
-    public static final List<MediaType> legalLogMediaTypes = Lists.newArrayList(MediaType.TEXT_XML,
+    public static final List<MediaType> legalLogMediaTypes = Arrays.asList(MediaType.TEXT_XML,
             MediaType.APPLICATION_XML,
             MediaType.APPLICATION_JSON,
             MediaType.APPLICATION_JSON_UTF8,
