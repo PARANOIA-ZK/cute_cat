@@ -1,4 +1,4 @@
-package com.paranoia.upupup.aspect.dto;
+package com.paranoia.upupup.proxy.one.dto;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserDTO extends BaseDTO{
+public class UserDTO extends BaseDTO {
 
     private String userName;
 }

@@ -1,4 +1,4 @@
-package com.paranoia.upupup.aspect;
+package com.paranoia.upupup.aspect.one;
 
 import java.lang.annotation.*;
 

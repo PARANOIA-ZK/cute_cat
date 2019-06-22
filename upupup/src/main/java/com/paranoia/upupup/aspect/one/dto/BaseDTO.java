@@ -1,6 +1,6 @@
-package com.paranoia.upupup.aspect.dto;
+package com.paranoia.upupup.aspect.one.dto;
 
-import com.paranoia.upupup.aspect.Inject;
+import com.paranoia.upupup.aspect.one.Inject;
 import lombok.Data;
 
 import java.util.Date;

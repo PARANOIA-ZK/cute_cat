@@ -1,4 +1,4 @@
-package com.paranoia.upupup.aspect.dto;
+package com.paranoia.upupup.aspect.one.dto;
 
 import lombok.Data;
 

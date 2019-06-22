@@ -1,9 +1,10 @@
-package com.paranoia.upupup.aspect;
+package com.paranoia.upupup.proxy.one;
 
-import com.paranoia.upupup.aspect.dto.NoExtendsDTO;
-import com.paranoia.upupup.aspect.dto.UserDTO;
+import com.paranoia.upupup.proxy.one.dto.NoExtendsDTO;
+import com.paranoia.upupup.proxy.one.dto.UserDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -12,10 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
  * @description
  */
 @RestController
-public class AspectController {
+@RequestMapping("/proxy")
+public class TestProxyController {
 
 
-    @PostMapping("/aspect")
+    @PostMapping
     public String testAspect(@RequestBody UserDTO userDTO){
         System.out.println("userDTO = " + userDTO);
         System.out.println("userDTO = " + userDTO.getCreatedAt());
@@ -23,7 +25,7 @@ public class AspectController {
     }
 
 
-    @PostMapping("/aspect/no")
+    @PostMapping("no")
     public String testAspectNo(@RequestBody NoExtendsDTO noExtendsDTO){
         System.out.println("noExtendsDTO = " + noExtendsDTO);
         return  noExtendsDTO.getUserName();
