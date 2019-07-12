@@ -9,6 +9,8 @@ import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import reactor.util.function.Tuples;
 
+import java.util.List;
+
 /**
  * @author PARANOIA_ZK
  * @date 2018/11/21 20:16
@@ -21,6 +23,7 @@ public class FluxOne {
         //testSubscribe();
         //testHandle();
         testSchedules();
+        testCollectList();
     }
 
     private static void testRange() {
@@ -64,8 +67,20 @@ public class FluxOne {
                     String t2 = tuple.getT2();
                     return new User(t1, t2);
                 });
+    }
 
-
+    private static void testCollectList() {
+        Flux.range(0, 10)
+                .map(a->{
+                    System.out.println("a = " + a);
+                    return a;
+                })
+                .collectList()
+                .map(aa->{
+                    aa.remove(2);
+                    return aa;
+                })
+                .subscribe(System.out::println);
     }
 
 
