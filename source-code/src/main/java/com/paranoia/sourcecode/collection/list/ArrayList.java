@@ -30,6 +30,8 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 
+import com.paranoia.sourcecode.collection.RandomAccess;
+
 /**
  * Resizable-array implementation of the <tt>List</tt> interface.  Implements
  * all optional list operations, and permits all elements, including
@@ -104,8 +106,7 @@ import java.util.function.UnaryOperator;
  * @since 1.2
  */
 
-public class ArrayList<E> extends AbstractList<E>
-        implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
+public class ArrayList<E> extends AbstractList<E> implements List<E>, RandomAccess, Cloneable, java.io.Serializable {
     private static final long serialVersionUID = 8683452581122892189L;
 
     /**
@@ -303,11 +304,7 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
     /**
-     * Returns the index of the first occurrence of the specified element
-     * in this list, or -1 if this list does not contain the element.
-     * More formally, returns the lowest index <tt>i</tt> such that
-     * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
-     * or -1 if there is no such index.
+     *获取集合中指定元素的下标位置，如果数组中没有此元素则返回-1
      */
     public int indexOf(Object o) {
         if (o == null) {
