@@ -1,5 +1,6 @@
 package com.paranoia.webfluxtransaction.transaction;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -9,5 +10,5 @@ import reactor.core.publisher.Mono;
  */
 public interface TransactionService {
 
-    Mono<TransactionDocument> save(TransactionDocument transactionDocument);
+    Flux<TransactionDocument> save(TransactionDocument transactionDocument, boolean exception);
 }

@@ -15,7 +15,7 @@ public class WebfluxTransactionApplication {
 
     @Bean
     public MongoClient mongoClient() {
-        return MongoClients.create("mongodb://47.106.221.253:27018");
+        return MongoClients.create("mongodb://47.106.221.253:27019");
     }
 
 }
