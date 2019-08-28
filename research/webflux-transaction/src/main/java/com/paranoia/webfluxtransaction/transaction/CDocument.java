@@ -6,26 +6,24 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
-
 /**
  * @author ZHANGKAI
  * @date 2019/3/20
  * @description
  */
 @Data
-@Document(collection = "transaction_webflux")
-public class TransactionDocument  {
+@Document(collection = "c_document")
+public class CDocument {
 
     @Id
     private String id;
 
     private String code;
 
-
     @Indexed(unique = true)
     private String name;
 
-    public TransactionDocument(String name) {
+    public CDocument(String name) {
         this.name = name;
     }
 

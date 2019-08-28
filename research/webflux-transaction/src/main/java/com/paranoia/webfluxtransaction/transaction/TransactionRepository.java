@@ -7,5 +7,5 @@ import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
  * @date 2019/3/20
  * @description
  */
-public interface TransactionRepository extends ReactiveMongoRepository<TransactionDocument,String> {
+public interface TransactionRepository extends ReactiveMongoRepository<ADocument,String> {
 }

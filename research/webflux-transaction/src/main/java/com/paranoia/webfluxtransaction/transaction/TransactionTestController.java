@@ -2,17 +2,15 @@ package com.paranoia.webfluxtransaction.transaction;
 
 import com.mongodb.ClientSessionOptions;
 import com.mongodb.reactivestreams.client.MongoClient;
-import com.mongodb.reactivestreams.client.MongoCollection;
-import com.mongodb.reactivestreams.client.Success;
 import lombok.extern.slf4j.Slf4j;
-import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 /**
@@ -24,38 +22,75 @@ import reactor.core.publisher.Mono;
 @RestController
 public class TransactionTestController {
     @Autowired
-    TransactionService transactionService;
+    EmbedService embedService;
+    @Autowired
+    CService cService;
     @Autowired
     MongoClient mongoClient;
-
     @Autowired
     ReactiveMongoTemplate reactiveMongoTemplate;
-    @Autowired
-    MongoTemplate mongoTemplate;
+
+    private static final ClientSessionOptions SESSION_OPTIONS;
+
+    static {
+        SESSION_OPTIONS = ClientSessionOptions.builder()
+                .causallyConsistent(true)
+                .build();
+    }
 
     @GetMapping("/test")
     public Mono test(@RequestParam boolean exception) {
-
-
-        ClientSessionOptions sessionOptions = ClientSessionOptions.builder()
-                .causallyConsistent(true)
-                .build();
-
-        return Mono.from(mongoClient.startSession(sessionOptions))
+        return Mono.from(mongoClient.startSession(SESSION_OPTIONS))
                 .flatMap(session -> {
                     session.startTransaction();
-                    log.info(session.hasActiveTransaction() + "");
-                    return transactionService.save(new TransactionDocument("张三123"), exception)
+                    log.info("业务进行之前的session事务状态：" + session.hasActiveTransaction());
+                    return embedService.saveAC(new ADocument("张三"), new CDocument("李四"), exception)
                             .onErrorResume(e -> {
-                                System.out.println("------------------------------");
+                                log.error("异常出现，controller全局回滚，此时的事务状态：" + session.hasActiveTransaction());
                                 return Mono.from(session.abortTransaction()).then(Mono.error(e));
                             })
-                            .collectList()
                             .flatMap(val -> Mono.from(session.commitTransaction()).then(Mono.just(val)))
                             .doFinally(signal -> session.close());
                 });
-
     }
+
+    @PostMapping("/test")
+    public Mono testA(@RequestParam boolean exception) {
+        return embedService.saveAC(new ADocument("张三"), new CDocument("李四"), exception);
+    }
+
+    @PatchMapping("/a")
+    public Mono<Boolean> updateA(@RequestParam String name, @RequestParam(required = false, defaultValue = "99") int age, @RequestParam Boolean exception) {
+        return Mono.from(mongoClient.startSession(SESSION_OPTIONS))
+                .flatMap(session -> {
+                    session.startTransaction();
+                    return embedService.update(name, age, exception)
+                            .onErrorResume(e -> Mono.from(session.abortTransaction()).then(Mono.error(e)))
+                            .flatMap(val -> Mono.from(session.commitTransaction()).then(Mono.just(val)))
+                            .doFinally(signal -> session.close());
+                });
+    }
+
+    @PostMapping("/a")
+    public Mono<Boolean> saveA() {
+        return Mono.from(mongoClient.startSession(SESSION_OPTIONS))
+                .flatMap(session -> {
+                    session.startTransaction();
+                    List<ADocument> collect = Stream.iterate(1, n -> n + 1)
+                            .limit(2000)
+                            .map(num -> {
+                                ADocument aDocument = new ADocument("张三");
+                                aDocument.setAge(num);
+                                return aDocument;
+                            })
+                            .collect(Collectors.toList());
+                    return embedService.saveA(collect)
+                            .onErrorResume(e -> Mono.from(session.abortTransaction()).then(Mono.error(e)))
+                            .flatMap(val -> Mono.from(session.commitTransaction()).then(Mono.just(val)))
+                            .doFinally(signal -> session.close());
+                });
+    }
+
 
     /**
      * 真的鸡肋，reactive版本的事务回滚目前只能使用collection来做  springdata的repository目前暂时不支持
