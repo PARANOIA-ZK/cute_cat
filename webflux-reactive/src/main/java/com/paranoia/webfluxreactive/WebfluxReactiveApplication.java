@@ -17,11 +17,11 @@ public class WebfluxReactiveApplication {
 
     @Bean
     public MongoClient mongoClient() {
-        return MongoClients.create("mongodb://47.106.221.253");
+        return MongoClients.create("mongodb://47.106.221.253:27019");
     }
 
-    @Bean
-    public ReactiveMongoTemplate reactiveMongoTemplate() {
-        return new ReactiveMongoTemplate(mongoClient(),"test");
-    }
+//    @Bean
+//    public ReactiveMongoTemplate reactiveMongoTemplate() {
+//        return new ReactiveMongoTemplate(mongoClient(),"test");
+//    }
 }
