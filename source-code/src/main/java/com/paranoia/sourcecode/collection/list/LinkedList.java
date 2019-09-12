@@ -30,38 +30,36 @@ import java.util.*;
 import java.util.function.Consumer;
 
 /**
- * Doubly-linked list implementation of the {@code List} and {@code Deque}
- * interfaces.  Implements all optional list operations, and permits all
- * elements (including {@code null}).
+ * Doubly-linked list implementation of the {@code List} and {@code Deque} interfaces.
+ * 实现了{@code list}和{@code Deque}接口的双链表。
+ * Implements all optional list operations, and permits all elements (including {@code null}).
+ * 实现所有可选列表操作，并允许所有元素(包括{@code null})。
+ * All of the operations perform as could be expected for a doubly-linkedlist.
+ * 所有操作的执行都与doubly-linkedlist的预期相同。
+ * Operations that index into the list will traverse the list from the beginning or the end, whichever is closer to the specified index.
+ * 索引到列表中的操作将从头到尾遍历列表，以更接近指定索引的操作为准。
  *
- * <p>All of the operations perform as could be expected for a doubly-linked
- * list.  Operations that index into the list will traverse the list from
- * the beginning or the end, whichever is closer to the specified index.
- *
- * <p><strong>Note that this implementation is not synchronized.</strong>
- * If multiple threads access a linked list concurrently, and at least
- * one of the threads modifies the list structurally, it <i>must</i> be
- * synchronized externally.  (A structural modification is any operation
- * that adds or deletes one or more elements; merely setting the value of
- * an element is not a structural modification.)  This is typically
- * accomplished by synchronizing on some object that naturally
- * encapsulates the list.
+ * <p><strong>
+ * Note that this implementation is not synchronized.
+ * 注意，这个实现不是同步的。
+ * If multiple threads access a linked list concurrently, and at least one of the threads modifies the list structurally, it must be  synchronized externally.
+ * 如果多个线程同时访问一个链表，并且其中至少有一个线程从结构上修改链表，那么它必须在外部同步。
+ * (A structural modification is any operation that adds or deletes one or more elements;
+ * merely setting the value of an element is not a structural modification.)
+ * (结构修改是添加或删除一个或多个元素的任何操作;仅仅设置元素的值并不是结构上的修改。)
+ * This is typically accomplished by synchronizing on some object that naturally encapsulates the list.
+ * 这通常是通过对一些自然封装列表的对象进行同步来实现的。
+ * If no such object exists, the list should be "wrapped" using the {@link Collections#synchronizedList Collections.synchronizedList} method.
+ * 如果不存在这样的对象，则应该使用{@link Collections#synchronizedList}“包装”列表。
  * <p>
- * If no such object exists, the list should be "wrapped" using the
- * {@link Collections#synchronizedList Collections.synchronizedList}
- * method.  This is best done at creation time, to prevent accidental
- * unsynchronized access to the list:<pre>
+ * This is best done at creation time, to prevent accidental unsynchronized access to the list
+ * 这最好在创建时完成，以防止对列表的意外非同步访问:<pre>
  *   List list = Collections.synchronizedList(new LinkedList(...));</pre>
- *
- * <p>The iterators returned by this class's {@code iterator} and
- * {@code listIterator} methods are <i>fail-fast</i>: if the list is
- * structurally modified at any time after the iterator is created, in
- * any way except through the Iterator's own {@code remove} or
- * {@code add} methods, the iterator will throw a {@link
- * ConcurrentModificationException}.  Thus, in the face of concurrent
- * modification, the iterator fails quickly and cleanly, rather than
- * risking arbitrary, non-deterministic behavior at an undetermined
- * time in the future.
+ * <p>
+ * 该类的{@code iterator}和{@code listIterator}方法返回的迭代器是支持快速失败的:
+ * 如果在创建迭代器之后，以任何方式(除了通过迭代器自己的{@code remove}或{@code add}方法)对列表进行结构修改，
+ * 迭代器将抛出一个{@link ConcurrentModificationException}。
+ * 因此，在面对并发修改时，迭代器会快速而干净地失败，而不是在未来不确定的时间，冒着任意的、不确定的行为的风险。
  *
  * <p>Note that the fail-fast behavior of an iterator cannot be guaranteed
  * as it is, generally speaking, impossible to make any hard guarantees in the
@@ -70,6 +68,9 @@ import java.util.function.Consumer;
  * Therefore, it would be wrong to write a program that depended on this
  * exception for its correctness:   <i>the fail-fast behavior of iterators
  * should be used only to detect bugs.</i>
+ * 注意，不能保证迭代器的快速故障行为，因为通常来说，在存在非同步并发修改的情况下，不可能做出任何严格的保证。
+ * 故障快速迭代器以最大的努力抛出{@code ConcurrentModificationException}。
+ * 因此，编写一个依赖于此异常来判断其正确性的程序是错误的:迭代器的快速故障行为应该只用于检测bug。
  *
  * <p>This class is a member of the
  * <a href="{@docRoot}/../technotes/guides/collections/index.html">
@@ -83,6 +84,9 @@ import java.util.function.Consumer;
  */
 
 public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>, Deque<E>, Cloneable, java.io.Serializable {
+    /**
+     * list大小，也就是node数量
+     */
     transient int size = 0;
 
     /**
@@ -114,6 +118,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * @throws NullPointerException if the specified collection is null
      */
     public LinkedList(Collection<? extends E> c) {
+        //调用无参构造
         this();
         addAll(c);
     }
@@ -143,13 +148,14 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
         final Node<E> newNode = new Node<>(l, e, null);
         //新的node作为链表的最后一个node
         last = newNode;
-        if (l == null)
+        if (l == null) {
             //如果最开始获取的last node 是null , 那么说明这个链表中其实之前是没有数据的
             //也可以看出，如果链表中只有一个node , 那么 fast 和 last 都指向这一个node
             first = newNode;
-        else
+        } else {
             //因为l现在是倒数第二个node，所以把l的next指向现在的最后一个node
             l.next = newNode;
+        }
         size++;
         modCount++;
     }
@@ -339,6 +345,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * @param e element to be appended to this list
      * @return {@code true} (as specified by {@link Collection#add})
      */
+    @Override
     public boolean add(E e) {
         linkLast(e);
         return true;
@@ -383,6 +390,9 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * the specified collection is modified while the operation is in
      * progress.  (Note that this will occur if the specified collection is
      * this list, and it's nonempty.)
+     * 按指定集合的迭代器返回的顺序，将指定集合中的所有元素追加到此列表的末尾。
+     * 如果在操作进行期间修改了指定的集合，则此操作的行为未定义。
+     * (注意，如果指定的集合是这个列表，并且它不是空的，则会发生这种情况。)
      *
      * @param c collection containing elements to be added to this list
      * @return {@code true} if this list changed as a result of the call
@@ -399,6 +409,9 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * the right (increases their indices).  The new elements will appear
      * in the list in the order that they are returned by the
      * specified collection's iterator.
+     * 从指定位置开始，将指定集合中的所有元素插入此列表。
+     * 将当前位于该位置的元素(如果有的话)和随后的任何元素移动到右边(增加它们的索引)。
+     * 新元素将按指定集合的迭代器返回它们的顺序出现在列表中。
      *
      * @param index index at which to insert the first element
      *              from the specified collection
@@ -407,29 +420,40 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * @throws IndexOutOfBoundsException {@inheritDoc}
      * @throws NullPointerException      if the specified collection is null
      */
+    @Override
     public boolean addAll(int index, Collection<? extends E> c) {
+        //检查这个index是否合法  0 < index <= size
         checkPositionIndex(index);
 
+        //参数中的目标集合转数组
         Object[] a = c.toArray();
         int numNew = a.length;
         if (numNew == 0)
+            //如果参数根本就是空，直接返回false
             return false;
 
+        //succ : index处的node
+        //pred : succ的前一个节点
         Node<E> pred, succ;
         if (index == size) {
             succ = null;
+            //这里注意，如果index=0,并且原先linkedlist就没有数据的话，last就是null
             pred = last;
         } else {
             succ = node(index);
             pred = succ.prev;
         }
 
+        //遍历目标数组
         for (Object o : a) {
             @SuppressWarnings("unchecked") E e = (E) o;
+            //每一个数组中的对象，创建一个新的节点（注意这里的pred可能为null）
             Node<E> newNode = new Node<>(pred, e, null);
             if (pred == null)
+                //如果index处前一个节点为null,说明这是一个空的linkedlist
                 first = newNode;
             else
+                //将新创建的节点指向原先index前一个节点的next ,
                 pred.next = newNode;
             pred = newNode;
         }
@@ -437,6 +461,8 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
         if (succ == null) {
             last = pred;
         } else {
+            //这一步之前的节点顺序是   0,...,index-1,newNode
+            //下边两行代码将新的newNode与原先的index处node链接起来  0,...,index-1,newNode,oleIndexNode,...
             pred.next = succ;
             succ.prev = pred;
         }
@@ -472,6 +498,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
 
     /**
      * Returns the element at the specified position in this list.
+     * 返回列表中指定位置的元素。
      *
      * @param index index of the element to return
      * @return the element at the specified position in this list
@@ -566,10 +593,12 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
 
     /**
      * Returns the (non-null) Node at the specified element index.
+     * 返回指定元素索引处的(非空)节点。
      */
     Node<E> node(int index) {
         // assert isElementIndex(index);
-        //这里挺有意思
+        //这里挺有意思，判断index是在前半段还是后半段，这样只需要检索一半数据，但其实要是数据很多，这个方法还是有点浪费时间啊
+        //但是话说回来，一个likedlist，放大量数据要想干嘛？快速检索效率很低的呀~
         if (index < (size >> 1)) {
             Node<E> x = first;
             for (int i = 0; i < index; i++)
@@ -591,6 +620,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * More formally, returns the lowest index {@code i} such that
      * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
      * or -1 if there is no such index.
+     * 返回此列表中指定元素的第一个出现项的索引，如果该列表不包含该元素，则返回-1。
      *
      * @param o element to search for
      * @return the index of the first occurrence of the specified element in
@@ -620,6 +650,8 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * More formally, returns the highest index {@code i} such that
      * <tt>(o==null&nbsp;?&nbsp;get(i)==null&nbsp;:&nbsp;o.equals(get(i)))</tt>,
      * or -1 if there is no such index.
+     * <p>
+     * 顺便看下lastIndexOf方法，就是index的初始值不是0了而是linkedlist的size，然后通过判断做index--操作
      *
      * @param o element to search for
      * @return the index of the last occurrence of the specified element in
@@ -651,6 +683,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * @return the head of this list, or {@code null} if this list is empty
      * @since 1.5
      */
+    @Override
     public E peek() {
         final Node<E> f = first;
         return (f == null) ? null : f.item;
@@ -696,6 +729,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * @return {@code true} (as specified by {@link Queue#offer})
      * @since 1.5
      */
+    @Override
     public boolean offer(E e) {
         return add(e);
     }
@@ -709,6 +743,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
      * @return {@code true} (as specified by {@link Deque#offerFirst})
      * @since 1.6
      */
+    @Override
     public boolean offerFirst(E e) {
         addFirst(e);
         return true;
@@ -848,18 +883,12 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
     }
 
     /**
-     * Returns a list-iterator of the elements in this list (in proper
-     * sequence), starting at the specified position in the list.
-     * Obeys the general contract of {@code List.listIterator(int)}.<p>
+     * 返回此列表中元素的列表迭代器(按适当的顺序)，从列表中的指定位置开始。
+     * 遵守{@code List.listIterator(int)}的通用契约。
      * <p>
-     * The list-iterator is <i>fail-fast</i>: if the list is structurally
-     * modified at any time after the Iterator is created, in any way except
-     * through the list-iterator's own {@code remove} or {@code add}
-     * methods, the list-iterator will throw a
-     * {@code ConcurrentModificationException}.  Thus, in the face of
-     * concurrent modification, the iterator fails quickly and cleanly, rather
-     * than risking arbitrary, non-deterministic behavior at an undetermined
-     * time in the future.
+     * list- Iterator是快速故障的:如果在创建了list- Iterator之后，以任何方式对列表进行结构修改，
+     * 除了通过list- Iterator自己的{@code remove}或{@code add}方法，list- Iterator将抛出一个{@code ConcurrentModificationException}。
+     * 因此，在面对并发修改时，迭代器会快速而干净地失败，而不是在将来某个不确定的时间冒着任意的、不确定的行为的风险。
      *
      * @param index index of the first element to be returned from the
      *              list-iterator (by a call to {@code next})
@@ -972,6 +1001,7 @@ public class LinkedList<E> extends AbstractSequentialList<E> implements List<E>,
         }
     }
 
+    //典型的内部类
     private static class Node<E> {
         /**
          * 节点值

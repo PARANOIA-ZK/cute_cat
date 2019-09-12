@@ -575,30 +575,17 @@ public abstract class AbstractList<E> extends AbstractCollection<E> implements L
     }
 
     /**
-     * The number of times this list has been <i>structurally modified</i>.
-     * Structural modifications are those that change the size of the
-     * list, or otherwise perturb it in such a fashion that iterations in
-     * progress may yield incorrect results.
+     * 这个列表被<i>结构修改的次数</i>。
+     * 结构修改是指改变列表的大小，或者以一种正在进行的迭代可能产生不正确结果的方式扰乱列表。
      *
-     * <p>This field is used by the iterator and list iterator implementation
-     * returned by the {@code iterator} and {@code listIterator} methods.
-     * If the value of this field changes unexpectedly, the iterator (or list
-     * iterator) will throw a {@code ConcurrentModificationException} in
-     * response to the {@code next}, {@code remove}, {@code previous},
-     * {@code set} or {@code add} operations.  This provides
-     * <i>fail-fast</i> behavior, rather than non-deterministic behavior in
-     * the face of concurrent modification during iteration.
+     * 这个字段由{@code iterator}和{@code listIterator}方法返回的迭代器和列表迭代器实现使用。
+     * 如果该字段的值发生意外更改，迭代器(或列表迭代器)将抛出一个{@code ConcurrentModificationException}来响应{@code next}、{@code remove}、{@code previous}、{@code set}或{@code add}操作。
+     * 这提供了快速故障行为，而不是在迭代过程中面对并发修改时的非确定性行为。
      *
-     * <p><b>Use of this field by subclasses is optional.</b> If a subclass
-     * wishes to provide fail-fast iterators (and list iterators), then it
-     * merely has to increment this field in its {@code add(int, E)} and
-     * {@code remove(int)} methods (and any other methods that it overrides
-     * that result in structural modifications to the list).  A single call to
-     * {@code add(int, E)} or {@code remove(int)} must add no more than
-     * one to this field, or the iterators (and list iterators) will throw
-     * bogus {@code ConcurrentModificationExceptions}.  If an implementation
-     * does not wish to provide fail-fast iterators, this field may be
-     * ignored.
+     * 子类使用此字段是可选的。
+     * 如果子类希望提供故障快速迭代器(和列表迭代器)，那么它只需在它的{@code add(int, E)}和{@code remove(int)}方法(以及它覆盖的导致列表结构修改的任何其他方法)中增加这个字段。
+     * 对{@code add(int, E)}或{@code remove(int)}的单个调用必须只向该字段添加一个，否则迭代器(和列表迭代器)将抛出伪{@code concurrentmodificationexception}。
+     * 如果实现不希望提供故障快速迭代器，则可以忽略此字段。
      */
     protected transient int modCount = 0;
 
