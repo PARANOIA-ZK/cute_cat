@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 public class HelloServiceImpl implements HelloService {
 
     @Override
-    public String sayHi(String name) {
-        return "你好," + name + ",欢迎你的到来！";
+    public String sayHi(String name, int age) {
+        return "你好," + name + ",你的年龄是：" + age;
     }
 }

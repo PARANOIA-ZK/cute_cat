@@ -24,10 +24,22 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>io.netty</groupId>-->
+            <!--<artifactId>netty-all</artifactId>-->
+            <!--<version>4.1.38.Final</version>-->
+        <!--</dependency>-->
+
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.38.Final</version>
+            <groupId>io.rsocket</groupId>
+            <artifactId>rsocket-core</artifactId>
+            <version>0.11.14</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.rsocket</groupId>
+            <artifactId>rsocket-transport-netty</artifactId>
+            <version>0.11.14</version>
         </dependency>
 
         <dependency>
@@ -40,6 +52,12 @@
             <groupId>com.paranoia</groupId>
             <artifactId>rpc-api</artifactId>
             <version>0.0.1-SNAPSHO</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.paranoia.rpc</groupId>
+            <artifactId>rpc-rsocket</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>

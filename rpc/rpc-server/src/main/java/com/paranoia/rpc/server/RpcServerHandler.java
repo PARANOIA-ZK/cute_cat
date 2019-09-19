@@ -1,6 +1,6 @@
 package com.paranoia.rpc.server;
 
-import com.paranoia.api.common.InvokeMessage;
+import com.paranoia.common.InvokeMessage;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 

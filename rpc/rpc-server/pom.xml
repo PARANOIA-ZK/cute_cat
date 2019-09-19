@@ -24,22 +24,28 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>io.netty</groupId>-->
+            <!--<artifactId>netty-all</artifactId>-->
+            <!--<version>4.1.38.Final</version>-->
+        <!--</dependency>-->
         <dependency>
-            <groupId>io.netty</groupId>
-            <artifactId>netty-all</artifactId>
-            <version>4.1.38.Final</version>
+            <groupId>com.paranoia</groupId>
+            <artifactId>rpc-api</artifactId>
+            <version>0.0.1-SNAPSHO</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.paranoia.rpc</groupId>
+            <artifactId>rpc-rsocket</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <dependency>
-            <groupId>com.paranoia</groupId>
-            <artifactId>rpc-api</artifactId>
-            <version>0.0.1-SNAPSHO</version>
         </dependency>
 
         <dependency>

@@ -18,8 +18,8 @@ public class ConsumerController {
     RpcProxy rpcProxy;
 
     @GetMapping("/consumer")
-    public String consumerTest(String name) {
+    public String consumerTest(String name, int age) {
         HelloService helloService = rpcProxy.create(HelloService.class);
-        return helloService.sayHi(name);
+        return helloService.sayHi(name, age);
     }
 }

@@ -1,4 +1,4 @@
-package com.paranoia.api.common;
+package com.paranoia.common;
 
 import lombok.Data;
 

@@ -7,5 +7,5 @@ package com.paranoia.api.service;
  */
 public interface HelloService {
 
-    String sayHi(String name);
+    String sayHi(String name, int age);
 }

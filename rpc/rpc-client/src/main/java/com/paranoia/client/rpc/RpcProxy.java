@@ -1,6 +1,6 @@
 package com.paranoia.client.rpc;
 
-import com.paranoia.api.common.InvokeMessage;
+import com.paranoia.common.InvokeMessage;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
