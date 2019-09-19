@@ -1,5 +1,7 @@
 package com.paranoia.api.service;
 
+import reactor.core.publisher.Mono;
+
 /**
  * @author ZHANGKAI
  * @date 2019/9/18
@@ -8,4 +10,6 @@ package com.paranoia.api.service;
 public interface HelloService {
 
     String sayHi(String name, int age);
+
+    Mono<String> sayHiReactive(String name, int age);
 }
