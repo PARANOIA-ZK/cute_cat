@@ -22,7 +22,6 @@ import java.util.Map;
  * @date 2019/9/18
  * @description
  */
-@Component
 public class RpcServer {
 
     /**
