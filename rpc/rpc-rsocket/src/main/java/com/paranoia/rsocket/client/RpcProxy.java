@@ -2,11 +2,13 @@ package com.paranoia.rsocket.client;
 
 import com.alibaba.fastjson.JSON;
 import com.paranoia.common.InvokeMessage;
+import io.netty.channel.ChannelOption;
 import io.rsocket.Payload;
 import io.rsocket.RSocketFactory;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import io.rsocket.util.DefaultPayload;
 import org.reactivestreams.Publisher;
+import reactor.netty.tcp.TcpClient;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -21,7 +23,8 @@ public class RpcProxy {
 
     public <T> T create(Class<?> clazz) {
 
-        return (T) Proxy.newProxyInstance(clazz.getClassLoader(),
+        return (T) Proxy.newProxyInstance(
+                clazz.getClassLoader(),
                 new Class[]{clazz},
                 new InvocationHandler() {
                     @Override
@@ -34,7 +37,8 @@ public class RpcProxy {
                         // 远程调用发生在这里
                         return reactiveRpcInvoke(clazz, method, args);
                     }
-                });
+                }
+        );
     }
 
     private Publisher reactiveRpcInvoke(Class<?> clazz, Method method, Object[] args) {
@@ -46,10 +50,15 @@ public class RpcProxy {
 
         String jsonString = JSON.toJSONString(message);
 
+        TcpClient tcpClient = TcpClient.create()
+                .host("localhost")
+                .port(9999)
+                .option(ChannelOption.TCP_NODELAY, true);
+
         return RSocketFactory.connect()
-                             .transport(TcpClientTransport.create("localhost", 9999))
-                             .start()
-                             .flatMap(rSocket -> rSocket.requestResponse(DefaultPayload.create(jsonString))
-                                                        .map(Payload::getDataUtf8));
+                .transport(TcpClientTransport.create(tcpClient))
+                .start()
+                .flatMap(rSocket -> rSocket.requestResponse(DefaultPayload.create(jsonString))
+                        .map(Payload::getDataUtf8));
     }
 }

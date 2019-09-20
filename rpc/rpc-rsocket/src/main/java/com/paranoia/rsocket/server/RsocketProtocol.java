@@ -43,12 +43,12 @@ public class RsocketProtocol {
                             String dataUtf8 = payload.getDataUtf8();
                             System.out.println("dataUtf8 = " + dataUtf8);
                             return Flux.interval(Duration.ofMillis(100))
-                                       .map(aLong -> DefaultPayload.create("Interval: " + aLong));
+                                    .map(aLong -> DefaultPayload.create("Interval: " + aLong));
                         }
 
                         @Override
                         public Mono<Payload> requestResponse(Payload payload) {
-                            InvokeMessage invokeMessage = decodeMetadata(payload);
+                            InvokeMessage invokeMessage = decodePayload(payload);
                             try {
                                 //class method args paramType
                                 //根据class找到实现类
@@ -58,8 +58,8 @@ public class RsocketProtocol {
                                     // 获取指定名称的服务提供者实例
                                     Object provider = registerMap.get(invokeMessage.getClassName());
                                     invoke = provider.getClass()
-                                                            .getMethod(invokeMessage.getMethodName(), invokeMessage.getParamTypes())
-                                                            .invoke(provider, invokeMessage.getParamValues());
+                                            .getMethod(invokeMessage.getMethodName(), invokeMessage.getParamTypes())
+                                            .invoke(provider, invokeMessage.getParamValues());
                                 }
 
                             } catch (Exception e) {
@@ -78,9 +78,9 @@ public class RsocketProtocol {
     }
 
 
-    private static InvokeMessage decodeMetadata(Payload payload){
+    private static InvokeMessage decodePayload(Payload payload) {
         String jsonString = payload.getDataUtf8();
-        return JSON.parseObject(jsonString,InvokeMessage.class);
+        return JSON.parseObject(jsonString, InvokeMessage.class);
     }
 
     /**
