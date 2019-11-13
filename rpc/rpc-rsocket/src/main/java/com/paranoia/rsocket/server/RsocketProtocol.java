@@ -4,10 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.paranoia.common.InvokeMessage;
 import io.rsocket.*;
 import io.rsocket.util.DefaultPayload;
+import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -40,38 +44,65 @@ public class RsocketProtocol {
                     new AbstractRSocket() {
                         @Override
                         public Flux<Payload> requestStream(Payload payload) {
-                            String dataUtf8 = payload.getDataUtf8();
-                            System.out.println("dataUtf8 = " + dataUtf8);
-                            return Flux.interval(Duration.ofMillis(100))
-                                    .map(aLong -> DefaultPayload.create("Interval: " + aLong));
+                            InvokeMessage invokeMessage = decodePayload(payload);
+                            return Mono.just(new Object())
+                                    .map(invoke -> {
+                                        if (registerMap.containsKey(invokeMessage.getClassName())) {
+                                            Object provider = registerMap.get(invokeMessage.getClassName());
+                                            try {
+                                                invoke = provider.getClass()
+                                                        .getMethod(invokeMessage.getMethodName(), invokeMessage.getParamTypes())
+                                                        .invoke(provider, invokeMessage.getParamValues());
+                                            } catch (Exception e) {
+                                                throw Exceptions.propagate(e);
+                                            }
+                                        } else {
+                                            //todo
+                                        }
+                                        return invoke;
+                                    })
+                                    .flatMapMany(invoke -> ((Flux<Object>) invoke))
+                                    .map(object -> {
+                                        try {
+                                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                            ObjectOutput out = new ObjectOutputStream(bos);
+                                            out.writeByte((byte) 0);
+                                            out.writeObject(object);
+                                            out.flush();
+                                            bos.flush();
+                                            bos.close();
+                                            return DefaultPayload.create(bos.toByteArray());
+                                        } catch (Throwable t) {
+                                            throw Exceptions.propagate(t);
+                                        }
+                                    });
                         }
 
                         @Override
                         public Mono<Payload> requestResponse(Payload payload) {
                             InvokeMessage invokeMessage = decodePayload(payload);
-                            try {
-                                //class method args paramType
-                                //根据class找到实现类
-                                //根据method args paramType 获取结果
-                                Object invoke;
-                                if (registerMap.containsKey(invokeMessage.getClassName())) {
-                                    // 获取指定名称的服务提供者实例
-                                    Object provider = registerMap.get(invokeMessage.getClassName());
-                                    invoke = provider.getClass()
-                                            .getMethod(invokeMessage.getMethodName(), invokeMessage.getParamTypes())
-                                            .invoke(provider, invokeMessage.getParamValues());
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                            //将结果封装成DefaultPayload
-
-
-                            String dataUtf8 = payload.getDataUtf8();
-                            System.out.println("dataUtf8 = " + dataUtf8);
-                            return Mono.just(DefaultPayload.create("这是请求参数：" + dataUtf8));
+                            return Mono.just(new Object())
+                                    .map(invoke -> {
+                                        //class method args paramType
+                                        //根据class找到实现类
+                                        //根据method args paramType 获取结果
+                                        if (registerMap.containsKey(invokeMessage.getClassName())) {
+                                            // 获取指定名称的服务提供者实例
+                                            Object provider = registerMap.get(invokeMessage.getClassName());
+                                            try {
+                                                invoke = provider.getClass()
+                                                        .getMethod(invokeMessage.getMethodName(), invokeMessage.getParamTypes())
+                                                        .invoke(provider, invokeMessage.getParamValues());
+                                            } catch (Exception e) {
+                                                throw Exceptions.propagate(e);
+                                            }
+                                        } else {
+                                            //todo
+                                        }
+                                        return invoke;
+                                    })
+                                    .flatMap(invoke -> ((Mono<Object>) invoke))
+                                    .map(r -> DefaultPayload.create(r.toString()));
                         }
                     });
         }
@@ -86,7 +117,7 @@ public class RsocketProtocol {
     /**
      * 将指定包下的提供者名称写入到classCache中
      *
-     * @param providerPackage
+     * @param providerPackage com.xx.xxx.service
      */
 
     public void getProviderClass(String providerPackage) {
@@ -118,7 +149,6 @@ public class RsocketProtocol {
         if (classCache.size() == 0) {
             return;
         }
-
         // registerMap的key为接口名，value为该接口对应的实现类的实例
         for (String className : classCache) {
             Class<?> clazz = Class.forName(className);

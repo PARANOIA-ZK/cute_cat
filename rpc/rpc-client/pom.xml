@@ -35,11 +35,15 @@
             <artifactId>rsocket-core</artifactId>
             <version>0.11.14</version>
         </dependency>
-
         <dependency>
             <groupId>io.rsocket</groupId>
             <artifactId>rsocket-transport-netty</artifactId>
             <version>0.11.14</version>
+        </dependency>
+        <dependency>
+            <groupId>com.paranoia.rpc</groupId>
+            <artifactId>rpc-rsocket</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -48,17 +52,15 @@
             <optional>true</optional>
         </dependency>
 
+
+        <!--api-->
         <dependency>
             <groupId>com.paranoia</groupId>
             <artifactId>rpc-api</artifactId>
             <version>0.0.1-SNAPSHO</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.paranoia.rpc</groupId>
-            <artifactId>rpc-rsocket</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-        </dependency>
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

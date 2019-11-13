@@ -1,5 +1,6 @@
 package com.paranoia.api.service;
 
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 /**
@@ -12,4 +13,6 @@ public interface HelloService {
     String sayHi(String name, int age);
 
     Mono<String> sayHiReactive(String name, int age);
+
+    Flux<Integer> fluxRequest(int num);
 }

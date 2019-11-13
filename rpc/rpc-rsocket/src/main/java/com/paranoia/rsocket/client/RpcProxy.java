@@ -8,6 +8,8 @@ import io.rsocket.RSocketFactory;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import io.rsocket.util.DefaultPayload;
 import org.reactivestreams.Publisher;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.netty.tcp.TcpClient;
 
 import java.lang.reflect.InvocationHandler;
@@ -33,22 +35,23 @@ public class RpcProxy {
                         if (Object.class.equals(method.getDeclaringClass())) {
                             return method.invoke(this, args);
                         }
-
                         // 远程调用发生在这里
-                        return reactiveRpcInvoke(clazz, method, args);
+                        if (method.getReturnType().getName().equals(Mono.class.getName())) {
+                            return monoRpcInvoke(clazz, method, args);
+                        }
+                        if (method.getReturnType().getName().equals(Flux.class.getName())) {
+                            return fluxRpcInvoke(clazz, method, args);
+                        }
+
+                        //todo 同步请求的处理
+                        return null;
                     }
                 }
         );
     }
 
-    private Publisher reactiveRpcInvoke(Class<?> clazz, Method method, Object[] args) {
-        InvokeMessage message = new InvokeMessage();
-        message.setClassName(clazz.getName());
-        message.setMethodName(method.getName());
-        message.setParamTypes(method.getParameterTypes());
-        message.setParamValues(args);
-
-        String jsonString = JSON.toJSONString(message);
+    private Publisher monoRpcInvoke(Class<?> clazz, Method method, Object[] args) {
+        String jsonString = changeRequestInfoAsString(clazz, method, args);
 
         TcpClient tcpClient = TcpClient.create()
                 .host("localhost")
@@ -58,7 +61,36 @@ public class RpcProxy {
         return RSocketFactory.connect()
                 .transport(TcpClientTransport.create(tcpClient))
                 .start()
-                .flatMap(rSocket -> rSocket.requestResponse(DefaultPayload.create(jsonString))
-                        .map(Payload::getDataUtf8));
+                .flatMap(rSocket ->
+                        rSocket.requestResponse(DefaultPayload.create(jsonString))
+                                .map(Payload::getDataUtf8)
+                );
+    }
+
+    private Publisher fluxRpcInvoke(Class<?> clazz, Method method, Object[] args) {
+        String jsonString = changeRequestInfoAsString(clazz, method, args);
+
+        TcpClient tcpClient = TcpClient.create()
+                .host("localhost")
+                .port(9999)
+                .option(ChannelOption.TCP_NODELAY, true);
+
+        return RSocketFactory.connect()
+                .transport(TcpClientTransport.create(tcpClient))
+                .start()
+                .flatMapMany(rSocket ->
+                        rSocket.requestStream(DefaultPayload.create(jsonString))
+                                .map(Payload::getData)
+                );
+    }
+
+    private String changeRequestInfoAsString(Class<?> clazz, Method method, Object[] args) {
+        InvokeMessage message = new InvokeMessage();
+        message.setClassName(clazz.getName());
+        message.setMethodName(method.getName());
+        message.setParamTypes(method.getParameterTypes());
+        message.setParamValues(args);
+
+        return JSON.toJSONString(message);
     }
 }
