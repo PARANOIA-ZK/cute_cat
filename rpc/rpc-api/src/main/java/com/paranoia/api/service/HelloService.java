@@ -1,5 +1,6 @@
 package com.paranoia.api.service;
 
+import com.paranoia.common.bo.Person;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -15,4 +16,6 @@ public interface HelloService {
     Mono<String> sayHiReactive(String name, int age);
 
     Flux<Integer> fluxRequest(int num);
+
+    Mono<Person> getPersonInfo(Person person);
 }

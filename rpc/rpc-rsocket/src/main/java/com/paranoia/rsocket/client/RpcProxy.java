@@ -2,19 +2,24 @@ package com.paranoia.rsocket.client;
 
 import com.alibaba.fastjson.JSON;
 import com.paranoia.common.InvokeMessage;
+import com.paranoia.rsocket.RSocketConstants;
+import com.paranoia.rsocket.util.RpcUtils;
 import io.netty.channel.ChannelOption;
 import io.rsocket.Payload;
 import io.rsocket.RSocketFactory;
 import io.rsocket.transport.netty.client.TcpClientTransport;
 import io.rsocket.util.DefaultPayload;
 import org.reactivestreams.Publisher;
+import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.netty.tcp.TcpClient;
 
+import java.io.*;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.nio.ByteBuffer;
 
 /**
  * @author ZHANGKAI
@@ -22,6 +27,15 @@ import java.lang.reflect.Proxy;
  * @description
  */
 public class RpcProxy {
+
+    private static TcpClient tcpClient;
+
+    static {
+        tcpClient = TcpClient.create()
+                .host("localhost")
+                .port(9999)
+                .option(ChannelOption.TCP_NODELAY, true);
+    }
 
     public <T> T create(Class<?> clazz) {
 
@@ -51,46 +65,60 @@ public class RpcProxy {
     }
 
     private Publisher monoRpcInvoke(Class<?> clazz, Method method, Object[] args) {
-        String jsonString = changeRequestInfoAsString(clazz, method, args);
-
-        TcpClient tcpClient = TcpClient.create()
-                .host("localhost")
-                .port(9999)
-                .option(ChannelOption.TCP_NODELAY, true);
+        InvokeMessage invokeMessage = getRequestInfo(clazz, method, args);
 
         return RSocketFactory.connect()
                 .transport(TcpClientTransport.create(tcpClient))
                 .start()
                 .flatMap(rSocket ->
-                        rSocket.requestResponse(DefaultPayload.create(jsonString))
-                                .map(Payload::getDataUtf8)
+                        rSocket.requestResponse(getRequestPayload(invokeMessage))
+                                .map(RpcUtils::decodePayload)
                 );
     }
 
     private Publisher fluxRpcInvoke(Class<?> clazz, Method method, Object[] args) {
-        String jsonString = changeRequestInfoAsString(clazz, method, args);
-
-        TcpClient tcpClient = TcpClient.create()
-                .host("localhost")
-                .port(9999)
-                .option(ChannelOption.TCP_NODELAY, true);
+        InvokeMessage invokeMessage = getRequestInfo(clazz, method, args);
 
         return RSocketFactory.connect()
                 .transport(TcpClientTransport.create(tcpClient))
                 .start()
                 .flatMapMany(rSocket ->
-                        rSocket.requestStream(DefaultPayload.create(jsonString))
-                                .map(Payload::getData)
+                        rSocket.requestStream(getRequestPayload(invokeMessage))
+                                .map(RpcUtils::decodePayload)
                 );
     }
 
-    private String changeRequestInfoAsString(Class<?> clazz, Method method, Object[] args) {
+
+    private Payload getRequestPayload(InvokeMessage invokeMessage) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(bos);
+            out.writeObject(invokeMessage);
+            out.flush();
+            bos.flush();
+            bos.close();
+            return DefaultPayload.create(bos.toByteArray());
+        } catch (Throwable throwable) {
+            throw Exceptions.propagate(throwable);
+        }
+    }
+
+    /**
+     * 组装client端的请求信息
+     *
+     * @param clazz
+     * @param method
+     * @param args
+     * @return
+     */
+    private InvokeMessage getRequestInfo(Class<?> clazz, Method method, Object[] args) {
         InvokeMessage message = new InvokeMessage();
         message.setClassName(clazz.getName());
         message.setMethodName(method.getName());
         message.setParamTypes(method.getParameterTypes());
         message.setParamValues(args);
-
-        return JSON.toJSONString(message);
+        return message;
     }
+
+
 }

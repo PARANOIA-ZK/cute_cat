@@ -2,17 +2,18 @@ package com.paranoia.rsocket.server;
 
 import com.alibaba.fastjson.JSON;
 import com.paranoia.common.InvokeMessage;
+import com.paranoia.rsocket.MetadataCodec;
+import com.paranoia.rsocket.RSocketConstants;
+import com.paranoia.rsocket.util.RpcUtils;
 import io.rsocket.*;
 import io.rsocket.util.DefaultPayload;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -102,7 +103,20 @@ public class RsocketProtocol {
                                         return invoke;
                                     })
                                     .flatMap(invoke -> ((Mono<Object>) invoke))
-                                    .map(r -> DefaultPayload.create(r.toString()));
+                                    .map(object -> {
+                                        try {
+                                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+                                            ObjectOutput out = new ObjectOutputStream(bos);
+                                            out.writeByte((byte) 0);
+                                            out.writeObject(object);
+                                            out.flush();
+                                            bos.flush();
+                                            bos.close();
+                                            return DefaultPayload.create(bos.toByteArray());
+                                        } catch (Throwable t) {
+                                            throw Exceptions.propagate(t);
+                                        }
+                                    });
                         }
                     });
         }
@@ -110,8 +124,19 @@ public class RsocketProtocol {
 
 
     private static InvokeMessage decodePayload(Payload payload) {
-        String jsonString = payload.getDataUtf8();
-        return JSON.parseObject(jsonString, InvokeMessage.class);
+        try {
+            ByteBuffer dataBuffer = payload.getData();
+            byte[] dataBytes = new byte[dataBuffer.remaining()];
+            dataBuffer.get(dataBytes, dataBuffer.position(), dataBuffer.remaining());
+            InputStream dataInputStream = new ByteArrayInputStream(dataBytes);
+            ObjectInput in = new ObjectInputStream(dataInputStream);
+            return ((InvokeMessage) in.readObject());
+        } catch (Throwable throwable) {
+            throw Exceptions.propagate(throwable);
+        }
+//        return (InvokeMessage) RpcUtils.decodePayload(payload);
+//        String jsonString = payload.getDataUtf8();
+//        return JSON.parseObject(jsonString, InvokeMessage.class);
     }
 
     /**

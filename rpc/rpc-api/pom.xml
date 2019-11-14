@@ -13,15 +13,16 @@
             <version>1.18.8</version>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>com.paranoia.rpc</groupId>-->
-            <!--<artifactId>rpc-common</artifactId>-->
-            <!--<version>0.0.1-SNAPSHOT</version>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>io.projectreactor</groupId>
             <artifactId>reactor-core</artifactId>
             <version>3.2.12.RELEASE</version>
+        </dependency>
+        <dependency>
+            <groupId>com.paranoia.rpc</groupId>
+            <artifactId>rpc-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
