@@ -70,6 +70,24 @@ public class ConsumerController {
 
         return helloService.getPersonInfo(person);
     }
+
+    @GetMapping("/reactive/consumer/persons")
+    public Flux<Person> reactiveConsumerPersons(String name) {
+
+        HelloService helloService = rpcProxy.create(HelloService.class);
+
+        Person person = new Person();
+        person.setName(name);
+        person.setAge(18);
+        person.setMoney(new BigDecimal(100));
+        Address address = new Address();
+        address.setProvince("浙江省");
+        address.setCity("杭州市");
+        address.setAddress("宝龙广场");
+        person.setAddress(address);
+
+        return helloService.getPersonInfos(person);
+    }
 }
 
 

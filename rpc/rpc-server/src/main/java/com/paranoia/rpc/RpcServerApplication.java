@@ -6,7 +6,6 @@ import io.rsocket.RSocketFactory;
 import io.rsocket.transport.netty.server.TcpServerTransport;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import reactor.netty.tcp.TcpClient;
 import reactor.netty.tcp.TcpServer;
 
 @SpringBootApplication
@@ -22,11 +21,11 @@ public class RpcServerApplication {
         TcpServer tcpServer = TcpServer.create()
                 .host("localhost")
                 .port(9999)
-                .option(ChannelOption.TCP_NODELAY, true);
-
+                .option(ChannelOption.TCP_NODELAY, Boolean.TRUE)
+                .option(ChannelOption.SO_KEEPALIVE, Boolean.TRUE)
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 3000);
 
         RSocketFactory.receive()
-//                .frameDecoder(PayloadDecoder.ZERO_COPY)
                 .acceptor(new RsocketProtocol.SocketAcceptorImpl())
                 .transport(TcpServerTransport.create(tcpServer))
                 .start()

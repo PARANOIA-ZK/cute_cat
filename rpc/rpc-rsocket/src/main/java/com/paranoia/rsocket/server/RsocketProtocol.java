@@ -1,20 +1,14 @@
 package com.paranoia.rsocket.server;
 
-import com.alibaba.fastjson.JSON;
 import com.paranoia.common.InvokeMessage;
-import com.paranoia.rsocket.MetadataCodec;
-import com.paranoia.rsocket.RSocketConstants;
 import com.paranoia.rsocket.util.RpcUtils;
 import io.rsocket.*;
-import io.rsocket.util.DefaultPayload;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.io.*;
+import java.io.File;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -35,109 +29,6 @@ public class RsocketProtocol {
      * 本地服务注册表
      */
     private static Map<String, Object> registerMap = new HashMap<>();
-
-
-    public static class SocketAcceptorImpl implements SocketAcceptor {
-
-        @Override
-        public Mono<RSocket> accept(ConnectionSetupPayload setupPayload, RSocket reactiveSocket) {
-            return Mono.just(
-                    new AbstractRSocket() {
-                        @Override
-                        public Flux<Payload> requestStream(Payload payload) {
-                            InvokeMessage invokeMessage = decodePayload(payload);
-                            return Mono.just(new Object())
-                                    .map(invoke -> {
-                                        if (registerMap.containsKey(invokeMessage.getClassName())) {
-                                            Object provider = registerMap.get(invokeMessage.getClassName());
-                                            try {
-                                                invoke = provider.getClass()
-                                                        .getMethod(invokeMessage.getMethodName(), invokeMessage.getParamTypes())
-                                                        .invoke(provider, invokeMessage.getParamValues());
-                                            } catch (Exception e) {
-                                                throw Exceptions.propagate(e);
-                                            }
-                                        } else {
-                                            //todo
-                                        }
-                                        return invoke;
-                                    })
-                                    .flatMapMany(invoke -> ((Flux<Object>) invoke))
-                                    .map(object -> {
-                                        try {
-                                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                                            ObjectOutput out = new ObjectOutputStream(bos);
-                                            out.writeByte((byte) 0);
-                                            out.writeObject(object);
-                                            out.flush();
-                                            bos.flush();
-                                            bos.close();
-                                            return DefaultPayload.create(bos.toByteArray());
-                                        } catch (Throwable t) {
-                                            throw Exceptions.propagate(t);
-                                        }
-                                    });
-                        }
-
-                        @Override
-                        public Mono<Payload> requestResponse(Payload payload) {
-                            InvokeMessage invokeMessage = decodePayload(payload);
-                            return Mono.just(new Object())
-                                    .map(invoke -> {
-                                        //class method args paramType
-                                        //根据class找到实现类
-                                        //根据method args paramType 获取结果
-                                        if (registerMap.containsKey(invokeMessage.getClassName())) {
-                                            // 获取指定名称的服务提供者实例
-                                            Object provider = registerMap.get(invokeMessage.getClassName());
-                                            try {
-                                                invoke = provider.getClass()
-                                                        .getMethod(invokeMessage.getMethodName(), invokeMessage.getParamTypes())
-                                                        .invoke(provider, invokeMessage.getParamValues());
-                                            } catch (Exception e) {
-                                                throw Exceptions.propagate(e);
-                                            }
-                                        } else {
-                                            //todo
-                                        }
-                                        return invoke;
-                                    })
-                                    .flatMap(invoke -> ((Mono<Object>) invoke))
-                                    .map(object -> {
-                                        try {
-                                            ByteArrayOutputStream bos = new ByteArrayOutputStream();
-                                            ObjectOutput out = new ObjectOutputStream(bos);
-                                            out.writeByte((byte) 0);
-                                            out.writeObject(object);
-                                            out.flush();
-                                            bos.flush();
-                                            bos.close();
-                                            return DefaultPayload.create(bos.toByteArray());
-                                        } catch (Throwable t) {
-                                            throw Exceptions.propagate(t);
-                                        }
-                                    });
-                        }
-                    });
-        }
-    }
-
-
-    private static InvokeMessage decodePayload(Payload payload) {
-        try {
-            ByteBuffer dataBuffer = payload.getData();
-            byte[] dataBytes = new byte[dataBuffer.remaining()];
-            dataBuffer.get(dataBytes, dataBuffer.position(), dataBuffer.remaining());
-            InputStream dataInputStream = new ByteArrayInputStream(dataBytes);
-            ObjectInput in = new ObjectInputStream(dataInputStream);
-            return ((InvokeMessage) in.readObject());
-        } catch (Throwable throwable) {
-            throw Exceptions.propagate(throwable);
-        }
-//        return (InvokeMessage) RpcUtils.decodePayload(payload);
-//        String jsonString = payload.getDataUtf8();
-//        return JSON.parseObject(jsonString, InvokeMessage.class);
-    }
 
     /**
      * 将指定包下的提供者名称写入到classCache中
@@ -167,7 +58,7 @@ public class RsocketProtocol {
     /**
      * 将服务名称与提供者实例之间的映射关系写入到registerMap
      *
-     * @throws Exception
+     * @throws Exception 反射触发的异常
      */
     public void doRegister() throws Exception {
         // 若没有提供者类，则无需注册
@@ -180,6 +71,82 @@ public class RsocketProtocol {
             registerMap.put(clazz.getInterfaces()[0].getName(), clazz.newInstance());
         }
     }
+
+    /**
+     * server socket 处理请求
+     */
+    public static class SocketAcceptorImpl implements SocketAcceptor {
+
+        @Override
+        public Mono<RSocket> accept(ConnectionSetupPayload setupPayload, RSocket reactiveSocket) {
+            return Mono.just(
+                    new AbstractRSocket() {
+                        @Override
+                        public Flux<Payload> requestStream(Payload payload) {
+                            return doFluxRequest(payload);
+                        }
+
+                        @Override
+                        public Mono<Payload> requestResponse(Payload payload) {
+                            return doMonoRequest(payload);
+                        }
+
+                    });
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Flux<Payload> doFluxRequest(Payload payload) {
+        InvokeMessage invokeMessage = decodePayload(payload);
+        return invoke(invokeMessage)
+                .flatMapMany(invoke -> ((Flux<Object>) invoke))
+                .map(RpcUtils::convertIntoPayload);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Mono<Payload> doMonoRequest(Payload payload) {
+        InvokeMessage invokeMessage = decodePayload(payload);
+        return invoke(invokeMessage)
+                .flatMap(invoke -> ((Mono<Object>) invoke))
+                .map(RpcUtils::convertIntoPayload);
+    }
+
+    /**
+     * 解码payload
+     *
+     * @param payload payload
+     * @return InvokeMessage
+     */
+    private static InvokeMessage decodePayload(Payload payload) {
+        return (InvokeMessage) RpcUtils.decodePayload(payload);
+    }
+
+    /**
+     * 本地缓存中获取对象实例，进行请求
+     *
+     * @param invokeMessage invokeMessage
+     * @return Mono<Object>
+     */
+    private static Mono<Object> invoke(InvokeMessage invokeMessage) {
+        return Mono.just(new Object())
+                .map(invoke -> {
+                    if (registerMap.containsKey(invokeMessage.getClassName())) {
+                        Object provider = registerMap.get(invokeMessage.getClassName());
+                        try {
+                            invoke = provider.getClass()
+                                    .getMethod(invokeMessage.getMethodName(), invokeMessage.getParamTypes())
+                                    .invoke(provider, invokeMessage.getParamValues());
+                        } catch (Exception e) {
+                            throw Exceptions.propagate(e);
+                        }
+                    } else {
+                        //todo
+                    }
+                    return invoke;
+                });
+    }
+
+
 }
 
 

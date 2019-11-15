@@ -18,4 +18,6 @@ public interface HelloService {
     Flux<Integer> fluxRequest(int num);
 
     Mono<Person> getPersonInfo(Person person);
+
+    Flux<Person> getPersonInfos(Person person);
 }

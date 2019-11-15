@@ -1,13 +1,10 @@
 package com.paranoia.rsocket.util;
 
-import com.paranoia.rsocket.RSocketConstants;
 import io.rsocket.Payload;
+import io.rsocket.util.DefaultPayload;
 import reactor.core.Exceptions;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
+import java.io.*;
 import java.nio.ByteBuffer;
 
 /**
@@ -18,7 +15,7 @@ import java.nio.ByteBuffer;
 public class RpcUtils {
 
     /**
-     * 解码请求返回的Payload对象
+     * 解码Payload对象
      *
      * @param payload 具体的流数据
      * @return <T> 具体对象
@@ -30,15 +27,29 @@ public class RpcUtils {
             dataBuffer.get(dataBytes, dataBuffer.position(), dataBuffer.remaining());
             InputStream dataInputStream = new ByteArrayInputStream(dataBytes);
             ObjectInput in = new ObjectInputStream(dataInputStream);
-            int flag = in.readByte();
-            if ((flag & RSocketConstants.FLAG_ERROR) != 0) {
-                Throwable t = (Throwable) in.readObject();
-                throw t;
-            } else {
-                return in.readObject();
-            }
+            return in.readObject();
         } catch (Throwable t) {
             throw Exceptions.propagate(t);
+        }
+    }
+
+    /**
+     * 编码Payload对象
+     *
+     * @param object 目标对象
+     * @return payload对象
+     */
+    public static Payload convertIntoPayload(Object object) {
+        try {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
+            ObjectOutput out = new ObjectOutputStream(bos);
+            out.writeObject(object);
+            out.flush();
+            bos.flush();
+            bos.close();
+            return DefaultPayload.create(bos.toByteArray());
+        } catch (Throwable throwable) {
+            throw Exceptions.propagate(throwable);
         }
     }
 }
