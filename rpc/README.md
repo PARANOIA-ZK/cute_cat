@@ -1,4 +1,11 @@
-### TODO
+## Architecture
+
+
+
+
+
+
+## TODO
 
 
 - [x] 本地注册中心
@@ -9,12 +16,13 @@
 - [ ] 调用超时处理  DefaultPayload.create可以传递元信息
 - [ ] 抽象TCP客户端/服务端的创建以及端口的管理
 - [ ] 不必要对象的频繁创建
+- [ ] server端服务调用时，实例的查找与创建。server端需要支持实例的二次创建并缓存
 
 
 
 
 
-### HIT POINT
+## HIT POINT
 
 - channel链接超时时间2秒
 -
