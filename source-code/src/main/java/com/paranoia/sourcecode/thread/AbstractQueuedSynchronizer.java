@@ -547,6 +547,7 @@ public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchron
 
     /**
      * The synchronization state.
+     * 使用int类型的成员变量表示同步状态
      */
     private volatile int state;
 
@@ -892,13 +893,14 @@ public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchron
                     failed = false;
                     return interrupted;
                 }
-                if (shouldParkAfterFailedAcquire(p, node) &&
-                        parkAndCheckInterrupt())
+                if (shouldParkAfterFailedAcquire(p, node) && parkAndCheckInterrupt()) {
                     interrupted = true;
+                }
             }
         } finally {
-            if (failed)
+            if (failed) {
                 cancelAcquire(node);
+            }
         }
     }
 
@@ -1290,6 +1292,7 @@ public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchron
         if (tryRelease(arg)) {
             Node h = head;
             if (h != null && h.waitStatus != 0)
+                //唤醒下一个节点
                 unparkSuccessor(h);
             return true;
         }
