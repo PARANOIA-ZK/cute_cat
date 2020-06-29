@@ -16,12 +16,19 @@ public class ObserverOne implements Observer {
     private Observable observable;
 
     /**
-     * 通过一个构造对象，实现实例化主题对象
+     * 通过一个构造方法，实现实例化主题对象
      */
     public ObserverOne(Observable observable) {
         this.observable = observable;
     }
 
+    /**
+     * 观察者被动更新数据
+     * 主题对象数据发生变更调用lookDataChanged()方法之后，这个方法作为订阅者的方法
+     * 会处理更新逻辑
+     * @param o
+     * @param arg
+     */
     @Override
     public void update(Observable o, Object arg) {
         if (o instanceof SubjectData) {
@@ -32,6 +39,7 @@ public class ObserverOne implements Observer {
 
     /**
      * 观察者主动拉取数据
+     * 因为观察者已经通过构造方法含有了主题对象的引用，所以可以实现主动拉取数据
      */
     public String getData() {
         if (observable instanceof SubjectData) {

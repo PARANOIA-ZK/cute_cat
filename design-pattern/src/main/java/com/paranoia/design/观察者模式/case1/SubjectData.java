@@ -17,7 +17,12 @@ public class SubjectData extends Observable {
      */
     private String lookData;
 
+    /**
+     * 主题数据发生变化时调用此方法，同时时间订阅发布
+     * @param changeData ：主题变化的数据
+     */
     public void lookDataChanged(String changeData) {
+        //修改主题数据
         lookData = changeData;
         //设置主题对象数据的改变状态
         this.setChanged();
