@@ -126,19 +126,18 @@ public class LockSupport {
     }
 
     /**
-     * Makes available the permit for the given thread, if it
-     * was not already available.  If the thread was blocked on
-     * {@code park} then it will unblock.  Otherwise, its next call
-     * to {@code park} is guaranteed not to block. This operation
-     * is not guaranteed to have any effect at all if the given
-     * thread has not been started.
+     * 如果许可不可用，则为给定线程提供许可。
+     * 如果线程在{@code park}上被阻塞，那么它将解除阻塞。
+     * 否则，它对{@code park}的下一次调用保证不会阻塞。
+     * 如果给定线程尚未启动，则不能保证此操作具有任何效果。
      *
      * @param thread the thread to unpark, or {@code null}, in which case
      *        this operation has no effect
      */
     public static void unpark(Thread thread) {
-        if (thread != null)
+        if (thread != null) {
             UNSAFE.unpark(thread);
+        }
     }
 
     /**

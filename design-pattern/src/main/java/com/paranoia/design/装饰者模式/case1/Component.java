@@ -7,7 +7,7 @@ package com.paranoia.design.装饰者模式.case1;
  */
 public interface Component {
 
-    String DESCRIPTION = "i am iron man";
+    String DESCRIPTION = "我是component";
 
     default String getDescription(){
         return DESCRIPTION;
