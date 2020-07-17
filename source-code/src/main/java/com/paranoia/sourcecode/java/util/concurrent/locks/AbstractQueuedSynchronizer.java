@@ -1917,8 +1917,9 @@ public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchron
          */
         private void doSignal(Node first) {
             do {
-                if ((firstWaiter = first.nextWaiter) == null)
+                if ((firstWaiter = first.nextWaiter) == null) {
                     lastWaiter = null;
+                }
                 first.nextWaiter = null;
             } while (!transferForSignal(first) &&
                     (first = firstWaiter) != null);
@@ -1982,12 +1983,16 @@ public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchron
          * @throws IllegalMonitorStateException if {@link #isHeldExclusively}
          *                                      returns {@code false}
          */
+        @Override
         public final void signal() {
-            if (!isHeldExclusively())
+            //必须是加锁的线程才能调用这个解锁的方法,否则会跑出异常
+            if (!isHeldExclusively()) {
                 throw new IllegalMonitorStateException();
+            }
             Node first = firstWaiter;
-            if (first != null)
+            if (first != null) {
                 doSignal(first);
+            }
         }
 
         /**
@@ -2084,10 +2089,12 @@ public abstract class AbstractQueuedSynchronizer extends AbstractOwnableSynchron
         @Override
         public final void await() throws InterruptedException {
             if (Thread.interrupted()) {
+                //当前线程如果被设置中断标记，那么抛出异常
                 throw new InterruptedException();
             }
-            //构建Node节点，并加入到等待队列中
+            //构建Node节点，当前线程加入到等待队列中
             Node node = addConditionWaiter();
+            //释放同步状态，也就是释放锁
             int savedState = fullyRelease(node);
             int interruptMode = 0;
             while (!isOnSyncQueue(node)) {
