@@ -18,5 +18,9 @@ public class test {
                 .collect(Collectors.toList());
         System.out.println("collect = " + collect);
 
+
+        do {
+            System.out.println("do");
+        }while (false);
     }
 }
