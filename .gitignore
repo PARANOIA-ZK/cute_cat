@@ -1,0 +1,4 @@
+localtest/.gradle/
+*.gradle*
+*/gradle/*
+*/gradlew*
