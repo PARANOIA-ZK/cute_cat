@@ -8,7 +8,7 @@ package com.paranoia.design.ifelse.case2;
  */
 public class TestCase2 {
     public static void main(String[] args) {
-        Object apply = StrategyEnum.getByMethod("methodA").apply("你好");
-        System.out.println(apply.toString());
+        String apply = StrategyEnum.getByMethod("methodA").apply("你好");
+        System.out.println(apply);
     }
 }

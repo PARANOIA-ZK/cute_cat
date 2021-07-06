@@ -14,8 +14,12 @@ public class MyStrategy {
     }
 
 
-    public static void methodB(String param) {
+    public static String methodB(String param) {
         System.out.println("i am method b");
+        return "";
     }
 
+    public static Object methodA(Object o) {
+        return "hahha:" + o;
+    }
 }
